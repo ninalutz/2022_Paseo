@@ -17,6 +17,7 @@ class Mouth{
 
     for(int i =0; i<points.size()-1; i++){
        stroke(c);
+       strokeWeight(2);
       line(points.get(i).x, points.get(i).y, points.get(i+1).x, points.get(i+1).y);
     }
           line(points.get(0).x, points.get(0).y, points.get(points.size()-1).x, points.get(points.size()-1).y);
@@ -30,7 +31,7 @@ class Mover{
    PVector v;
   
   // defines the speed of the circle
-  float speed = 1;
+  float speed = 0.25;
   int index;
   
   int nextTarget = 1;
@@ -53,10 +54,10 @@ class Mover{
     float next_mouth_y =  mouths.get(nextTarget).points.get(index).y;
     
     //test targets
-    fill(c, 50);
-    noStroke();
-    ellipse(cur_mouth_x, cur_mouth_y, 1, 1);
-    ellipse(next_mouth_x, next_mouth_y, 1, 1);
+    //fill(0, 0, 255);
+    //noStroke();
+    ellipse(cur_mouth_x, cur_mouth_y, 10, 10);
+    ellipse(next_mouth_x, next_mouth_y, 10, 10);
 
 
     //compute moving angle for each point between two mouths
@@ -66,13 +67,13 @@ class Mover{
 
     // compute new position of v
     v = new PVector(v.x + sin(angle)*speed, v.y + cos(angle)*speed);
-    noStroke();
-    ellipse(v.x, v.y, 1, 1);
+    fill(0, 0, 255);
+    ellipse(v.x, v.y, 10, 10);
     
     if (dist(v.x, v.y, next_mouth_x, next_mouth_y)< 1 && nextTarget < mouths.size() - 1) {
         nextTarget++;
-        //strokeWeight(2);
-        //mouths.get(nextTarget).drawMouth(color(0, 0, 255));
+        strokeWeight(20);
+        mouths.get(nextTarget).drawMouth(color(0, 0, 255));
         println(nextTarget);
     }
 

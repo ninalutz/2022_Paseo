@@ -18,27 +18,31 @@ void setup() {
   
   initOuter();
   
+  colorMode(HSB);
+  
   background(0);
 
 }
 
 void draw(){
-  fill(0, 1);
-  rect(0, 0, width, height);
+  //fill(0, 1);
+  //rect(0, 0, width, height);
   
+    background(0);
+
   scale(2.5);
   translate(-350, -210);
 
 
   for(int i =0; i<outer_mouths.size(); i++){
-    outer_mouths.get(i).drawMouth(color(2*i, 0, 0));
-    fill(0, 1);
-    rect(0, 0, width, height);
+    outer_mouths.get(i).drawMouth(color(2*i, 360, 360));
+    //fill(0, 1);
+    //rect(0, 0, width, height);
   }
   
-  //for(int i = 0; i<outer_mouths.get(0).points.size(); i++){
-  //  outer_movers.get(i).move(255);
-  //}  
+  for(int i = 0; i<outer_mouths.get(0).points.size(); i++){
+    outer_movers.get(i).move(255);
+  }  
 }
 
 void initOuter(){
