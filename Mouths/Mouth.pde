@@ -16,8 +16,10 @@ class Mouth{
 
     for(int i =0; i<points.size()-1; i++){
        stroke(c);
-      //line(points.get(i).x, points.get(i).y, points.get(i+1).x, points.get(i+1).y);
+      line(points.get(i).x, points.get(i).y, points.get(i+1).x, points.get(i+1).y);
     }
+          line(points.get(0).x, points.get(0).y, points.get(points.size()-1).x, points.get(points.size()-1).y);
+
   }
 }
 
@@ -27,31 +29,33 @@ class Mover{
    PVector v;
   
   // defines the speed of the circle
-   float speed = 0.25;
-   int nextTarget = 1;
-
-
-  Mover(ArrayList<Mouth> _mouths){
+  float speed = 1;
+  int index;
+  
+  int nextTarget = 1;
+  
+  Mover(ArrayList<Mouth> _mouths, int _index){
     mouths = _mouths;
-    v = new PVector(mouths.get(0).points.get(0).x, mouths.get(0).points.get(0).y);
+    index = _index;
+    v = new PVector(mouths.get(0).points.get(index).x, mouths.get(0).points.get(index).y);
+    println(mouths.size());
   }
   
   
   
-  void move(){
-
-    int i = 0;
+  void move(color c){
+    //println("Mouth: " + str(nextTarget) + " " + "Index: " + str(index));
     
-    float cur_mouth_x =  mouths.get(nextTarget -1).points.get(i).x;
-    float cur_mouth_y =  mouths.get(nextTarget -1).points.get(i).y;
+    float cur_mouth_x =  mouths.get(nextTarget -1).points.get(index).x;
+    float cur_mouth_y =  mouths.get(nextTarget -1).points.get(index).y;
 
-    float next_mouth_x = mouths.get(nextTarget).points.get(i).x;
-    float next_mouth_y =  mouths.get(nextTarget).points.get(i).y;
+    float next_mouth_x = mouths.get(nextTarget).points.get(index).x;
+    float next_mouth_y =  mouths.get(nextTarget).points.get(index).y;
     
     //test targets
-    fill(0, 255, 0);
-    ellipse(cur_mouth_x, cur_mouth_y, 10, 10);
-    ellipse(next_mouth_x, next_mouth_y, 10, 10);
+    //fill(0, 255, 0);
+    //ellipse(cur_mouth_x, cur_mouth_y, 10, 10);
+    //ellipse(next_mouth_x, next_mouth_y, 10, 10);
 
 
     //compute moving angle for each point between two mouths
@@ -61,26 +65,14 @@ class Mover{
 
     // compute new position of v
     v = new PVector(v.x + sin(angle)*speed, v.y + cos(angle)*speed);
-    fill(0);
-    stroke(0);
-    //println(v);
-    ellipse(v.x, v.y, 5, 5);
-    
-    if(v.x == next_mouth_x){
-        println("HELLO");
-    }
+    fill(c);
+    stroke(c);
+    //ellipse(v.x, v.y, 5, 5);
     
     if (dist(v.x, v.y, next_mouth_x, next_mouth_y)< 1 && nextTarget < mouths.size() - 1) {
         nextTarget++;
-        println(nextTarget);
+         mouths.get(nextTarget).drawMouth(color(0, 0, 255));
     }
-  }
-}
 
-
-void keyReleased() {
-  if (key == ENTER) {
-    animate = !animate;
-    //println("animation: "+ animate);
   }
 }
