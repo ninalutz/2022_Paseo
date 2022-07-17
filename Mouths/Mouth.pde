@@ -11,6 +11,7 @@ class Mouth{
     //  noStroke();
     noFill();
     stroke(0);
+    strokeWeight(0.5);
       //ellipse(points.get(0).x,points.get(0).y, 10, 10);
     //}
 
@@ -38,7 +39,6 @@ class Mover{
     mouths = _mouths;
     index = _index;
     v = new PVector(mouths.get(0).points.get(index).x, mouths.get(0).points.get(index).y);
-    println(mouths.size());
   }
   
   
@@ -53,9 +53,10 @@ class Mover{
     float next_mouth_y =  mouths.get(nextTarget).points.get(index).y;
     
     //test targets
-    //fill(0, 255, 0);
-    //ellipse(cur_mouth_x, cur_mouth_y, 10, 10);
-    //ellipse(next_mouth_x, next_mouth_y, 10, 10);
+    fill(c, 50);
+    noStroke();
+    ellipse(cur_mouth_x, cur_mouth_y, 1, 1);
+    ellipse(next_mouth_x, next_mouth_y, 1, 1);
 
 
     //compute moving angle for each point between two mouths
@@ -65,13 +66,14 @@ class Mover{
 
     // compute new position of v
     v = new PVector(v.x + sin(angle)*speed, v.y + cos(angle)*speed);
-    fill(c);
-    stroke(c);
-    //ellipse(v.x, v.y, 5, 5);
+    noStroke();
+    ellipse(v.x, v.y, 1, 1);
     
     if (dist(v.x, v.y, next_mouth_x, next_mouth_y)< 1 && nextTarget < mouths.size() - 1) {
         nextTarget++;
-         mouths.get(nextTarget).drawMouth(color(0, 0, 255));
+        //strokeWeight(2);
+        //mouths.get(nextTarget).drawMouth(color(0, 0, 255));
+        println(nextTarget);
     }
 
   }
