@@ -56,8 +56,8 @@ class Mover{
     //test targets
     //fill(0, 0, 255);
     //noStroke();
-    ellipse(cur_mouth_x, cur_mouth_y, 10, 10);
-    ellipse(next_mouth_x, next_mouth_y, 10, 10);
+    //ellipse(cur_mouth_x, cur_mouth_y, 10, 10);
+    //ellipse(next_mouth_x, next_mouth_y, 10, 10);
 
 
     //compute moving angle for each point between two mouths
@@ -68,7 +68,7 @@ class Mover{
     // compute new position of v
     v = new PVector(v.x + sin(angle)*speed, v.y + cos(angle)*speed);
     fill(0, 0, 255);
-    ellipse(v.x, v.y, 10, 10);
+    //ellipse(v.x, v.y, 10, 10);
     
     if (dist(v.x, v.y, next_mouth_x, next_mouth_y)< 1 && nextTarget < mouths.size() - 1) {
         nextTarget++;
