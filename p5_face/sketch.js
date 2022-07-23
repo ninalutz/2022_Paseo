@@ -63,13 +63,12 @@ function drawFaces(faces,filled){
       const [x, y, z] = keypoints[j];
       fill(255);
       noStroke();
-      circle(x,y,2);
+      circle(x,y,1);
     }
   }
 }
 
 // reduces the number of keypoints to the desired set 
-// (VTX7, VTX33, VTX68, etc.)
 function packFace(face,set){
   var ret = {
     scaledMesh:[],
@@ -124,9 +123,9 @@ function draw() {
   // now draw all the other users' faces (& drawings) from the server
   push()
   
-  scale(2);
+  scale(3);
   
-
+  translate(0, -50)
   drawFaces(myFaces);
   pop();
   
