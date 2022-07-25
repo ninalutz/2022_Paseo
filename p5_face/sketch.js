@@ -13,7 +13,7 @@
 // var VTX = VTX468;
 
 //do the mouth only
-var VTX = outer_mouth_landmarks;
+var VTX = mouth_landmarks;
 
 var facemeshModel = null; // this will be loaded with the facemesh model
                           // WARNING: do NOT call it 'model', because p5 already has something called 'model'
@@ -108,7 +108,7 @@ function draw() {
     })
   }
   
-  background(0, 20);
+  background(0);
   
   //debug
   // push();
