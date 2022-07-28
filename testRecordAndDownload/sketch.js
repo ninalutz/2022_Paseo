@@ -44,6 +44,7 @@ function downloadVideo() {
 
 function exportVideo(e) {
   var blob = new Blob(chunks);
+  console.log(chunks)
   var vid = document.createElement('video');
   vid.id = 'recorded'
   vid.controls = true;

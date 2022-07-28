@@ -61,9 +61,9 @@ function drawFaces(faces,filled){
 
     for (var j = 0; j < keypoints.length; j++) {
       const [x, y, z] = keypoints[j];
-      fill(255);
+      fill(255, 0, 0);
       noStroke();
-      circle(x,y,1);
+      circle(x,y, 2);
     }
   }
 }
@@ -101,8 +101,8 @@ function draw() {
         statusText = "Show some faces!"
       }else{
         // display the confidence, to 3 decimal places
-        statusText = "Confidence: "+ (Math.round(_faces[0].faceInViewConfidence*1000)/1000);
-        
+        // statusText = "Confidence: "+ (Math.round(_faces[0].faceInViewConfidence*1000)/1000) + " FrameRate: " + frameRate();
+      
       }
       
     })
@@ -113,7 +113,7 @@ function draw() {
   //debug
   // push();
   // scale(0.5); // downscale the webcam capture before drawing, so it doesn't take up too much screen sapce
-  // image(capture, 0, 0, capture.width, capture.height);
+  // // image(capture, 0, 0, capture.width, capture.height);
   // noFill();
   // stroke(255,0,0);
   // drawFaces(myFaces); // draw my face skeleton
@@ -131,6 +131,6 @@ function draw() {
   
   push();
   fill(255,0,0);
-  text(statusText,2,60);
+  // text(statusText,20,400);
   pop();
 }
