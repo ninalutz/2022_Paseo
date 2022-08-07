@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+
+<html>
+   <body>
+
+   	  <video controls width="1280" height="720" id = "video" loop>
+         <source src = "please.webm" type="video/webm"> />
+      </video>
+      
+      <audio controls id = "audio" loop>
+         <source src = "please.wav" type = "audio/wav" />
+      </audio>
+      
+
+    <form>
+    <input type="button" value="PlaySoundAndVideo" onClick="PlaySoundAndVideo('video'),PlaySoundAndVideo('audio')">
+
+
+   </body>
+</html>
+
+
+ <script>
+
+    function PlaySoundAndVideo(soundObj,videoObj) {
+	    var soundAndVideo=document.getElementById(soundObj,videoObj);
+	    soundAndVideo.play();
+    }
+
+
+
+    </script>

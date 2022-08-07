@@ -1,0 +1,11 @@
+screencapture -v -V5 -g Desktop/mouth_test_HELLO.mov
+
+screencapture -v -V7 -G Desktop/mouth_test_microphone.mov
+
+
+ffmpeg -f avfoundation -i ":1" -t 10 Desktop/audiocapture.mp3
+
+
+To run 
+
+./audio.sh

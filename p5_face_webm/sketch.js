@@ -28,9 +28,6 @@ var myFaces = []; // faces detected in this browser
 var capture; // webcam capture, managed by p5.js
 
 
-//sound things
-let mic, sound_recorder, soundFile;
-
 var btn = document.querySelector('button');
 var  chunks = [];
 
@@ -123,23 +120,6 @@ function setup() {
   
   capture.hide();
   background(0)
-
-  //SOUND THINGS
-  // create an audio in
-  mic = new p5.AudioIn();
-
-  // prompts user to enable their browser mic
-  mic.start();
-
-  // create a sound recorder
-  sound_recorder = new p5.SoundRecorder();
-
-  // connect the mic to the recorder
-  sound_recorder.setInput(mic);
-
-  // this sound file will be used to playback & save the recording
-  soundFile = new p5.SoundFile();
-  userStartAudio();
 }
 
 
@@ -192,7 +172,7 @@ function draw() {
       }else{
         // display the confidence, to 3 decimal places
         statusText = "Confidence: "+ (Math.round(_faces[0].faceInViewConfidence*1000)/1000) + "Frame Rate: " + frameRate();
-        sound_recorder.record(soundFile);
+        // sound_recorder.record(soundFile);
       }
       
     })
@@ -223,13 +203,4 @@ function draw() {
   fill(255,0,0);
   text(statusText,2,200);
   pop();
-}
-
-function keyPressed() {
-  if(key === 's'){
-   console.log("STOP AUDIO");
-   sound_recorder.stop();
-   console.log("Saving audio");
-   save(soundFile, 'testVideo.wav');
-  }
 }

@@ -13,7 +13,7 @@
 // var VTX = VTX468;
 
 //do the mouth only
-var VTX = mouth_landmarks;
+var VTX = outer_mouth_landmarks;
 
 var facemeshModel = null; // this will be loaded with the facemesh model
                           // WARNING: do NOT call it 'model', because p5 already has something called 'model'
@@ -109,15 +109,18 @@ function draw() {
   }
   
   background(0);
+
+  text(statusText,20,400);
+
   
-  //debug
-  // push();
-  // scale(0.5); // downscale the webcam capture before drawing, so it doesn't take up too much screen sapce
-  // // image(capture, 0, 0, capture.width, capture.height);
-  // noFill();
-  // stroke(255,0,0);
-  // drawFaces(myFaces); // draw my face skeleton
-  // pop();
+//  debug
+  push();
+  scale(0.5); // downscale the webcam capture before drawing, so it doesn't take up too much screen sapce
+  image(capture, 0, 0, capture.width, capture.height);
+  noFill();
+  stroke(255,0,0);
+  drawFaces(myFaces); // draw my face skeleton
+  pop();
   
   
   // now draw all the other users' faces (& drawings) from the server
@@ -125,12 +128,11 @@ function draw() {
   
   scale(3);
   
-  translate(0, -50)
+  translate(0, -100)
   drawFaces(myFaces);
   pop();
   
   push();
   fill(255,0,0);
-  // text(statusText,20,400);
   pop();
 }
