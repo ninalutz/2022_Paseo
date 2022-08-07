@@ -28,38 +28,6 @@ var myFaces = []; // faces detected in this browser
 var capture; // webcam capture, managed by p5.js
 
 
-var btn = document.querySelector('button');
-var  chunks = [];
-
-function record() {
-  console.log("RECORDING")
-  chunks.length = 0;
-  let stream = document.querySelector('canvas').captureStream(30),
-    recorder = new MediaRecorder(stream);
-
-  recorder.ondataavailable = e => {
-    if (e.data.size) {
-      chunks.push(e.data);
-       console.log("DATA");
-    }
-    else{
-      console.log("NO DATA")
-    }
-  };
-  recorder.onstop = exportVideo;
-  btn.onclick = e => {
-    recorder.stop();
-    
-    btn.textContent = 'start recording';
-    btn.onclick = record;
-     console.log("RECORDED");
-  };
-  recorder.start();
-  btn.textContent = 'stop recording';
-       console.log("HELLO")
-}
-
-
 function downloadVideo() {
   var xhr = new XMLHttpRequest();
   var vid_link =  document.querySelector('myvideo').src;
@@ -103,9 +71,7 @@ facemesh.load().then(function(_model){
 
 
 function setup() {
-    btn = document.querySelector('button');
-  btn.onclick = record;
-
+  
   createCanvas(1200, 720);
   capture = createCapture(VIDEO);
   
@@ -172,7 +138,6 @@ function draw() {
       }else{
         // display the confidence, to 3 decimal places
         statusText = "Confidence: "+ (Math.round(_faces[0].faceInViewConfidence*1000)/1000) + "Frame Rate: " + frameRate();
-        // sound_recorder.record(soundFile);
       }
       
     })
