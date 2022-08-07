@@ -99,7 +99,7 @@ function drawFaces(faces,filled){
       const [x, y, z] = keypoints[j];
       fill(255);
       noStroke();
-      circle(x,y,1);
+      circle(x,y,2);
     }
   }
 }
@@ -158,9 +158,9 @@ function draw() {
   // now draw all the other users' faces (& drawings) from the server
   push()
   
-  scale(3);
+  scale(4);
   
-  translate(0, -50)
+  translate(-200, -200)
   drawFaces(myFaces);
   pop();
   
