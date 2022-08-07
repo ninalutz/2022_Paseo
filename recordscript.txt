@@ -9,3 +9,6 @@ ffmpeg -f avfoundation -i ":1" -t 10 Desktop/audiocapture.mp3
 To run 
 
 ./audio.sh
+
+
+python3 -m http.server
