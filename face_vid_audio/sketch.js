@@ -22,7 +22,7 @@ facemesh.load().then(function(_model){
 var btn = document.querySelector('button');
 var  chunks = [];
 let mic, soundRecorder, soundFile;
-
+var videoRecordIndex = 0;
 
 function setup() {
   configSound();
@@ -134,8 +134,9 @@ function packFace(face,set){
 function recordVideo() {
   console.log("RECORDING")
   chunks.length = 0;
+  chunks = []
   let stream = document.querySelector('canvas').captureStream(30),
-    recorder = new MediaRecorder(stream);
+  recorder = new MediaRecorder(stream);
 
   recorder.ondataavailable = e => {
     if (e.data.size) {
@@ -148,6 +149,7 @@ function recordVideo() {
     soundRecorder.stop();
     btn.textContent = 'start recording';
     btn.onclick = recordVideo;
+    videoRecordIndex += 1;
   };
   recorder.start();
   soundRecorder.record(soundFile);
@@ -156,11 +158,10 @@ function recordVideo() {
 
 
 function downloadVideo() {
-  console.log(soundFile);
   save(soundFile, 'audio.wav');
 
   var xhr = new XMLHttpRequest();
-  var vid_link =  document.querySelector('myvideo').src;
+  var vid_link =  document.querySelector('myvideo' + videoRecordIndex.toString()).src;
   xhr.open('GET', vid_link, true);
   xhr.responseType = 'blob';
   xhr.onload = function() {
@@ -169,7 +170,7 @@ function downloadVideo() {
     var tag = document.createElement('a');
     tag.href = imageUrl;
     tag.target = '_blank';
-    tag.download = 'video.webm';
+    tag.download = 'video' + videoRecordIndex.toString() + '.webm';
     document.body.appendChild(tag);
     tag.click();
     document.body.removeChild(tag);
@@ -182,7 +183,7 @@ function downloadVideo() {
 
 function exportVideo(e) {
   var blob = new Blob(chunks);
-  var vid = document.createElement('myvideo');
+  var vid = document.createElement('myvideo' + videoRecordIndex.toString());
   vid.id = 'recorded'
   vid.controls = true;
   vid.src = URL.createObjectURL(blob);
