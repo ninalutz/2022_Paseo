@@ -12,3 +12,9 @@ To run
 
 
 python3 -m http.server
+
+
+
+http://localhost:8000/Documents/Github/2022_Paseo/face_vid_audio/
+
+http://localhost:8000/Documents/Github/2022_Paseo/face_vid_audio/test.html

@@ -159,7 +159,7 @@ function recordVideo() {
 
 
 function downloadVideo() {
-  save(soundFile, 'audio.wav');
+  save(soundFile, 'audio' + (videoRecordIndex-1).toString() +'.wav');
 
   var xhr = new XMLHttpRequest();
   var vid_link =  document.querySelector('myvideo' + videoRecordIndex.toString()).src;
