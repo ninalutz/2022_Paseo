@@ -157,7 +157,7 @@ function recordVideo() {
 
 function downloadVideo() {
   console.log(soundFile);
-  save(soundFile, 'mySound.wav');
+  save(soundFile, 'audio.wav');
 
   var xhr = new XMLHttpRequest();
   var vid_link =  document.querySelector('myvideo').src;
@@ -169,7 +169,7 @@ function downloadVideo() {
     var tag = document.createElement('a');
     tag.href = imageUrl;
     tag.target = '_blank';
-    tag.download = 'sample.webm';
+    tag.download = 'video.webm';
     document.body.appendChild(tag);
     tag.click();
     document.body.removeChild(tag);
