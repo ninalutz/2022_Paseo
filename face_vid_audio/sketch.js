@@ -23,6 +23,7 @@ var btn = document.querySelector('button');
 var  chunks = [];
 let mic, soundRecorder, soundFile;
 var videoRecordIndex = 0;
+var recording = false;
 
 function setup() {
   configSound();
@@ -214,4 +215,11 @@ function configSound(){
   soundFile = new p5.SoundFile();
 
   userStartAudio();
+}
+
+
+function keyPressed(){
+  if(keyCode == 50){
+      btn.click();
+  }
 }
