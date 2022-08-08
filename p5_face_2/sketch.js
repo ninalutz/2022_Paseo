@@ -13,7 +13,7 @@
 // var VTX = VTX468;
 
 //do the mouth only
-var VTX = mouth_landmarks;
+var VTX = outer_mouth_landmarks;
 
 var facemeshModel = null; // this will be loaded with the facemesh model
                           // WARNING: do NOT call it 'model', because p5 already has something called 'model'
@@ -27,6 +27,7 @@ var myFaces = []; // faces detected in this browser
 
 var capture; // webcam capture, managed by p5.js
 
+var center = [];
 
 function downloadVideo() {
   var xhr = new XMLHttpRequest();
@@ -97,9 +98,20 @@ function drawFaces(faces,filled){
 
     for (var j = 0; j < keypoints.length; j++) {
       const [x, y, z] = keypoints[j];
-      fill(255);
+
+      if(j == 5){
+      fill(255, 0, 0);
+      }
+      else{
+        fill(200, 200, 0);
+      }
+
       noStroke();
-      circle(x,y,2);
+      var mapped_x = map(x, 0, 640, width/4, 3*width/4, true);
+      var mapped_y = map(y, 0, 320, height/4, 3*height/4, true);
+      // circle(x,y,2);
+      fill(0, 255, 0);
+      circle(mapped_x, mapped_y, 2);
     }
   }
 }
@@ -144,28 +156,17 @@ function draw() {
   }
   
   background(0, 0, 100);
-  
-  //debug
-  // push();
-  // scale(0.5); // downscale the webcam capture before drawing, so it doesn't take up too much screen sapce
-  // image(capture, 0, 0, capture.width, capture.height);
-  // noFill();
-  // stroke(255,0,0);
-  // drawFaces(myFaces); // draw my face skeleton
-  // pop();
-  
-  
-  // now draw all the other users' faces (& drawings) from the server
-  push()
-  
-  scale(4);
-  
-  translate(-200, -200)
+   // image(capture, 0, 0, capture.width, capture.height);
+
+  push();
+  scale(2);
+  translate(-width/4, -height/4)
+  noFill();
+  stroke(255, 0, 0);
+  rect(width/4, height/4, width/2, height/2);
   drawFaces(myFaces);
   pop();
-  
-  push();
+
   fill(255,0,0);
   text(statusText,2,200);
-  pop();
 }
