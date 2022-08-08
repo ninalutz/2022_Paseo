@@ -38,7 +38,7 @@ function setup() {
   // this is to make sure the capture is loaded before asking facemesh to take a look
   // otherwise facemesh will be very unhappy
   capture.elt.onloadeddata = function(){
-    console.log("video initialized");
+    // console.log("video initialized");
     videoDataLoaded = true;
   }
   
@@ -134,7 +134,7 @@ function packFace(face,set){
 
 
 function recordVideo() {
-  console.log("RECORDING")
+  // console.log("RECORDING")
   chunks.length = 0;
   chunks = []
   let stream = document.querySelector('canvas').captureStream(30),
