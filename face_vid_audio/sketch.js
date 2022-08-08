@@ -64,37 +64,30 @@ function draw() {
         statusText = "Show some faces!"
       }else{
         // display the confidence, to 3 decimal places
-        statusText = "Confidence: "+ (Math.round(_faces[0].faceInViewConfidence*1000)/1000) + "Frame Rate: " + frameRate();
+        statusText = "Confidence: "+ (Math.round(_faces[0].faceInViewConfidence*1000)/1000) + " Frame Rate: " + frameRate();
       }
       
     })
   }
   
-  background(0, 100, 100);
+  background(0);
   
-  //debug
-  // push();
-  // scale(0.5); // downscale the webcam capture before drawing, so it doesn't take up too much screen sapce
-  // image(capture, 0, 0, capture.width, capture.height);
-  // noFill();
-  // stroke(255,0,0);
-  // drawFaces(myFaces); // draw my face skeleton
-  // pop();
-  
-  
-  // now draw all the other users' faces (& drawings) from the server
-  push()
-  
-  scale(3);
-  
-  translate(-100, -200)
+
+  push();
+  scale(2);
+  translate(-width/4, -height/4)
+  noFill();
+  stroke(255, 0, 0);
+  strokeWeight(10);
+  rect(width/4, height/4, width/2, height/2);
   drawFaces(myFaces);
   pop();
-  
-  push();
-  fill(255,255,0);
-  text(statusText,2,200);
-  pop();
+
+  strokeWeight(1);
+  fill(0, 255, 0);
+  text(statusText,20,100);
+  text(videoRecordIndex,20, 150);
+
 }
 
 
@@ -106,9 +99,16 @@ function drawFaces(faces,filled){
 
     for (var j = 0; j < keypoints.length; j++) {
       const [x, y, z] = keypoints[j];
-      fill(255);
+      // fill(255);
       noStroke();
-      circle(x,y,2);
+      // circle(x,y,3);
+
+      var mapped_x = map(x, 0, 640, width/4, 3*width/4, true);
+      var mapped_y = map(y, 0, 320, height/4, 3*height/4, true);
+      // circle(x,y,2);
+      fill(0, 255, 0);
+      circle(mapped_x, mapped_y, 3);
+
     }
   }
 }
