@@ -1,45 +1,16 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html><html lang="en"><head>
+    <script src="p5.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8">
 
-<html>
-   <body>
+    <script src="sketch2.js"></script>
 
-   	  <video controls width="1280" height="720" id = "video" src = "/Downloads/video_1.webm" type="video/webm"> />
-      </video>
-      
-      <audio controls id = "audio" src = "/Downloads/audio_1.wav" type = "audio/wav" />
-      </audio>
-      
-    <form>
-    <input type="button" id = "btn" value="PlaySoundAndVideo" onClick="PlaySoundAndVideo('video'),PlaySoundAndVideo('audio')">
+  </head>
+ <body id="page-top" class = "bg-dark"> 
 
+<div class = "col-12 px-5 bg-dark text-white center pt-3">
 
-   </body>
+  <div class = "sketch-holder"></div>
+</div>
+</body>
 </html>
-
-
- <script>
-
-    function PlaySoundAndVideo(soundObj,videoObj) {
-	    var soundAndVideo=document.getElementById(soundObj,videoObj);
-	    soundAndVideo.play();
-    }
-
-
-      var vid = document.getElementById("video");
-      var aud = document.getElementById("audio");
-      var btn = document.getElementById("btn");
-
-      vid.onended = function() {
-        var this_src_vid = vid.src.split('_');
-        console.log(this_src_vid)
-        console.log(this_src_vid[0] + '_' + (parseInt(this_src_vid[1]) + 1).toString());
-        vid.src = this_src_vid[0] + '_' + (parseInt(this_src_vid[1]) + 1).toString() + '.webm';
-
-        var this_src_aud = aud.src.split('_');
-        aud.src = this_src_aud[0] + '_' + (parseInt(this_src_aud[1]) + 1).toString() + '.wav';
-
-        btn.click();
-
-      };
-
-    </script>
