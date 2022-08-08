@@ -159,7 +159,7 @@ function recordVideo() {
 
 
 function downloadVideo() {
-  save(soundFile, 'audio' + (videoRecordIndex-1).toString() +'.wav');
+  save(soundFile, 'audio_' + (videoRecordIndex-1).toString() +'.wav');
 
   var xhr = new XMLHttpRequest();
   var vid_link =  document.querySelector('myvideo' + videoRecordIndex.toString()).src;
@@ -171,7 +171,7 @@ function downloadVideo() {
     var tag = document.createElement('a');
     tag.href = imageUrl;
     tag.target = '_blank';
-    tag.download = 'video' + videoRecordIndex.toString() + '.webm';
+    tag.download = 'video_' + videoRecordIndex.toString() + '.webm';
     document.body.appendChild(tag);
     tag.click();
     document.body.removeChild(tag);
