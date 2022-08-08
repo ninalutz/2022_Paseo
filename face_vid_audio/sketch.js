@@ -64,7 +64,7 @@ function draw() {
         statusText = "Show some faces!"
       }else{
         // display the confidence, to 3 decimal places
-        statusText = "Confidence: "+ (Math.round(_faces[0].faceInViewConfidence*1000)/1000) + " Frame Rate: " + frameRate();
+        statusText = "Confidence: "+ (Math.round(_faces[0].faceInViewConfidence*1000)/1000) + "   Frame Rate: " + int(frameRate());
       }
       
     })
@@ -85,8 +85,9 @@ function draw() {
 
   strokeWeight(1);
   fill(0, 255, 0);
+  textSize(20);
   text(statusText,20,100);
-  text(videoRecordIndex,20, 150);
+  text('Video/audio clip: ' + videoRecordIndex.toString() + '    Recording: ' + recording,20, 150);
 
 }
 
@@ -149,12 +150,14 @@ function recordVideo() {
     recorder.stop();
     soundRecorder.stop();
     btn.textContent = 'start recording';
+    recording = false;
     btn.onclick = recordVideo;
     videoRecordIndex += 1;
   };
   recorder.start();
   soundRecorder.record(soundFile);
   btn.textContent = 'stop recording';
+  recording = true;
 }
 
 
