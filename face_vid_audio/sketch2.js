@@ -4,18 +4,15 @@ var vid2;
 var videos = [];
 var vid;
 var playing = false;
+var audio;
 
 function setup() {
-  vid0 = createVideo('/Downloads/video_2.webm');
+  vid0 = createVideo('/Downloads/video_4.webm');
+  audio = loadSound('/Downloads/audio_4.wav');
+
   vid0.size(1280,720);
   vid0.hide();
-  vid1 = createVideo('/Downloads/video_3.webm');
-  vid1.size(1280,720);
-  vid1.hide();
-  vid2 = createVideo('/Downloads/video_4.webm');
-  vid2.size(1280,720);
-  vid2.hide();
-  videos = [vid0, vid1, vid2]
+  videos = [vid0]
 
   createCanvas(1280, 720)
 }
@@ -40,6 +37,7 @@ function playNextVideo() {
   vid =  videos[randomInt];
   
   vid.play();
+  audio.play();
   // vid.loop();
   vid.hide();
   

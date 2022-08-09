@@ -107,8 +107,8 @@ function drawFaces(faces,filled){
       var mapped_x = map(x, 0, 640, width/4, 3*width/4, true);
       var mapped_y = map(y, 0, 320, height/4, 3*height/4, true);
       // circle(x,y,2);
-      fill(0, 255, 0);
-      circle(mapped_x, mapped_y, 3);
+      fill(0, 255, 255);
+      circle(mapped_x, mapped_y, 5);
 
     }
   }
