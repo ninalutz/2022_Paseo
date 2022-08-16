@@ -12,6 +12,12 @@ var myFaces = []; // faces detected in this browser
                   // currently facemesh only supports single face, so this will be either empty or singleton
 var capture; // webcam capture, managed by p5.js
 
+//scale fro drawing the dots in the bounds
+var scale_factor = 3;
+var margin_factor = 8;
+
+var min_x, max_x, min_y, max_y; 
+
 // Load the MediaPipe facemesh model assets.
 facemesh.load().then(function(_model){
   statusText = "Model loaded."
@@ -30,7 +36,13 @@ function setup() {
   btn = document.querySelector('button');
   btn.onclick = recordVideo;
 
-  createCanvas(1200, 720);
+  createCanvas(960, 800);
+
+  min_x = width/margin_factor;
+  max_x = (margin_factor-1)*width/margin_factor;
+  min_y = height/margin_factor;
+  max_y = ((margin_factor-1)*height)/margin_factor;
+
   capture = createCapture(VIDEO);
   
   // capture = createVideo("test.mov");
@@ -43,7 +55,7 @@ function setup() {
   }
   
   capture.hide();
-  background(0)
+  background(0);
 }
 
 
@@ -73,21 +85,25 @@ function draw() {
   background(0);
   
 
-  push();
-  scale(2);
-  translate(-width/4, -height/4)
+
   noFill();
   stroke(255, 0, 0);
   strokeWeight(10);
-  rect(width/4, height/4, width/2, height/2);
+  rect(min_x, min_y, max_x - min_x, max_y-min_y);
+  
+  push();
+  // scale(scale_factor);
+  // translate(-width/(2*scale_factor), -height/(2*scale_factor));
+  stroke(255, 0, 255);
+  rect(min_x, min_y, max_x - min_x, max_y-min_y);
   drawFaces(myFaces);
   pop();
 
   strokeWeight(1);
   fill(0, 255, 0);
   textSize(20);
-  text(statusText,20,100);
-  text('Video/audio clip: ' + videoRecordIndex.toString() + '    Recording: ' + recording,20, 150);
+  text(statusText,20,30);
+  text('Video/audio clip: ' + videoRecordIndex.toString() + '    Recording: ' + recording,20, 60);
 
 }
 
@@ -102,11 +118,8 @@ function drawFaces(faces,filled){
       const [x, y, z] = keypoints[j];
       // fill(255);
       noStroke();
-      // circle(x,y,3);
-
-      var mapped_x = map(x, 0, 640, width/4, 3*width/4, true);
-      var mapped_y = map(y, 0, 320, height/4, 3*height/4, true);
-      // circle(x,y,2);
+      var mapped_x = map(x, 0, 640, min_x, max_x, true);
+      var mapped_y = map(y, 0, 320, min_y, max_y, true);
       fill(0, 255, 255);
       circle(mapped_x, mapped_y, 5);
 
