@@ -7,8 +7,8 @@ var playing = false;
 var audio;
 
 function setup() {
-  vid0 = createVideo('/Downloads/video_4.webm');
-  audio = loadSound('/Downloads/audio_4.wav');
+  vid0 = createVideo('/Downloads/video_3 (1).webm');
+  audio = loadSound('/Downloads/audio_2 (1).wav');
 
   vid0.size(1280,720);
   vid0.hide();

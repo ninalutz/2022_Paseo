@@ -13,10 +13,13 @@ var myFaces = []; // faces detected in this browser
 var capture; // webcam capture, managed by p5.js
 
 //scale fro drawing the dots in the bounds
-var scale_factor = 3.5;
+var scale_factor = 2;
 var margin_factor = 8;
 
 var min_x, max_x, min_y, max_y; 
+
+var drawing_canvas_width = 960;
+var drawing_canvas_height = 800;
 
 // Load the MediaPipe facemesh model assets.
 facemesh.load().then(function(_model){
@@ -38,10 +41,10 @@ function setup() {
 
   createCanvas(960, 800);
 
-  min_x = width/margin_factor;
-  max_x = (margin_factor-1)*width/margin_factor;
-  min_y = height/margin_factor;
-  max_y = ((margin_factor-1)*height)/margin_factor;
+  min_x = drawing_canvas_width/margin_factor;
+  max_x = (margin_factor-1)*drawing_canvas_width/margin_factor;
+  min_y = drawing_canvas_height/margin_factor;
+  max_y = ((margin_factor-1)*drawing_canvas_height)/margin_factor;
 
   capture = createCapture(VIDEO);
   
@@ -92,8 +95,6 @@ function draw() {
   rect(min_x, min_y, max_x - min_x, max_y-min_y);
   
   push();
-  // scale(scale_factor);
-  // translate(-width/(2*scale_factor), -height/(2*scale_factor));
   stroke(255, 0, 255);
   rect(min_x, min_y, max_x - min_x, max_y-min_y);
   drawFaces(myFaces);
@@ -121,7 +122,8 @@ function drawFaces(faces,filled){
       var mapped_x = map(x*scale_factor, 0, 640, min_x, max_x, false);
       var mapped_y = map(y*scale_factor, 0, 320, min_y, max_y, false);
       fill(0, 255, 255);
-      circle(mapped_x - width, mapped_y - height, 5*scale_factor);
+      circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 5*scale_factor);
+      circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 5*scale_factor);
 
     }
   }
