@@ -7,14 +7,14 @@ var playing = false;
 var audio;
 
 function setup() {
-  vid0 = createVideo('/Downloads/video_3 (1).webm');
-  audio = loadSound('/Downloads/audio_2 (1).wav');
+  vid0 = createVideo('/Downloads/test.webm');
+  audio = loadSound('/Downloads/audio_test.wav');
 
-  vid0.size(1280,720);
+  createCanvas(960, 1080);
   vid0.hide();
   videos = [vid0]
 
-  createCanvas(1280, 720)
+  createCanvas(960, 1080);
 }
 
 
