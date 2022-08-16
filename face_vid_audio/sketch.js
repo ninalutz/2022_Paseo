@@ -1,5 +1,5 @@
 //Config for video
-var VTX = outer_mouth_landmarks;
+var VTX = mouth_landmarks;
 
 var facemeshModel = null; // this will be loaded with the facemesh model
                           // WARNING: do NOT call it 'model', because p5 already has something called 'model'
@@ -13,7 +13,7 @@ var myFaces = []; // faces detected in this browser
 var capture; // webcam capture, managed by p5.js
 
 //scale fro drawing the dots in the bounds
-var scale_factor = 3;
+var scale_factor = 3.5;
 var margin_factor = 8;
 
 var min_x, max_x, min_y, max_y; 
@@ -118,10 +118,10 @@ function drawFaces(faces,filled){
       const [x, y, z] = keypoints[j];
       // fill(255);
       noStroke();
-      var mapped_x = map(x, 0, 640, min_x, max_x, true);
-      var mapped_y = map(y, 0, 320, min_y, max_y, true);
+      var mapped_x = map(x*scale_factor, 0, 640, min_x, max_x, false);
+      var mapped_y = map(y*scale_factor, 0, 320, min_y, max_y, false);
       fill(0, 255, 255);
-      circle(mapped_x, mapped_y, 5);
+      circle(mapped_x - width, mapped_y - height, 5*scale_factor);
 
     }
   }
