@@ -138,10 +138,12 @@ function draw() {
   }
   else{
     if(recording){
+      fill(255, 0, 0);
       text("Recording! Press button or '2' to stop and save",20,30);
     }
     else{
-      text("Press button or '2' to start recording your answer to this question: ", 20, 30)
+      fill(255, 255, 0);
+      text("Press button or '2' to start recording your answer to this question: ", 20, 30);
     }
   }
 
@@ -182,14 +184,14 @@ function drawFaces(faces,filled){
       }
 
       if(animation_type == 2){
-        opacity = 8;
+        opacity = 15;
         colorMode(HSB);
         hue += 0.05;
         if (hue > 255) {
           hue = 0;
         }
         stroke(hue, 255, 255);
-        strokeWeight(10)
+        strokeWeight(10);
         strokeJoin(ROUND);
         strokeCap(ROUND)
         if(j<keypoints.length-1){
@@ -209,7 +211,7 @@ function drawFaces(faces,filled){
 
 
       if(animation_type == 3){
-        opacity = 10;
+        opacity = 15;
         fill(0, 255, 255);
         noStroke();
         circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 5*scale_factor);
