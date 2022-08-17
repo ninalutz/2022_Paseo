@@ -53,10 +53,17 @@ function setup() {
 
   createCanvas(windowWidth, windowHeight);
 
-  min_x = drawing_canvas_width/margin_factor;
-  max_x = (margin_factor-1)*drawing_canvas_width/margin_factor;
-  min_y = drawing_canvas_height/margin_factor;
-  max_y = ((margin_factor-1)*drawing_canvas_height)/margin_factor;
+  // min_x = drawing_canvas_width/margin_factor;
+  // max_x = (margin_factor-1)*drawing_canvas_width/margin_factor;
+  // min_y = drawing_canvas_height/margin_factor;
+  // max_y = ((margin_factor-1)*drawing_canvas_height)/margin_factor;
+
+  min_x = width/margin_factor;
+  max_x = (margin_factor-1)*width/margin_factor;
+  min_y = height/margin_factor;
+  max_y = ((margin_factor-1)*height)/margin_factor;
+
+
 
   capture = createCapture(VIDEO);
   
@@ -110,11 +117,9 @@ function draw() {
 
   colorMode(RGB);
 
-
-  fill(0);
-  stroke(255);
-  rect(0, 0, width, 80);
   noStroke();
+  fill(0);
+  rect(0, 0, width, 80);
   strokeWeight(1);
   fill(0, 255, 0);
   textSize(50);
