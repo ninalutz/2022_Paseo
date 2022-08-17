@@ -21,7 +21,7 @@ var min_x, max_x, min_y, max_y;
 var drawing_canvas_width = 1280;
 var drawing_canvas_height = 720;
 
-var animation_type = 1;
+var animation_type = 0;
 var animation_max = 4;
 var opacity = 255;
 
@@ -112,6 +112,9 @@ function draw() {
   drawFaces(myFaces);
   pop();
 
+  fill(0);
+  noStroke();
+  rect(0, 0, width, 80)
   strokeWeight(1);
   fill(0, 255, 0);
   textSize(20);
@@ -129,30 +132,29 @@ function drawFaces(faces,filled){
 
     for (var j = 0; j < keypoints.length; j++) {
       const [x, y, z] = keypoints[j];
-      
-      // fill(255);
-      noStroke();
       var mapped_x = map(x*scale_factor, 0, 640, min_x, max_x, false);
       var mapped_y = map(y*scale_factor, 0, 320, min_y, max_y, false);
-      fill(0, 255, 255);
+      
       if(animation_type == 0){
-        circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 3*scale_factor);
-      }
-      if(animation_type == 1){
-        colorMode(HSB);
-
+        fill(0, 255, 0);
         noStroke();
 
-        fill(hue, 255, 255)
+        opacity = 255;
+        circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 3*scale_factor);
+      }
 
-        hue += 0.01;
-        if (hue > 255) {
-          hue = 0;
-        }
-
-        // circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 18*scale_factor, 18*scale_factor);
+      if(animation_type == 1){
+        opacity = 255;
+        fill(255);
+        stroke(255);
+        strokeWeight(0.5)
         circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 5*scale_factor, 5*scale_factor);
+        const [x2, y2, z2] = keypoints[min(j+int(random(1, keypoints.length)), keypoints.length-1)];
 
+        var mapped_x2 = map(x2*scale_factor, 0, 640, min_x, max_x, false);
+        var mapped_y2 = map(y2*scale_factor, 0, 320, min_y, max_y, false);
+
+        line(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, mapped_x2 - drawing_canvas_width/2, mapped_y2 - drawing_canvas_height/2);
       }
 
       if(animation_type == 2){
@@ -180,6 +182,16 @@ function drawFaces(faces,filled){
         line(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, mapped_x1 - drawing_canvas_width/2, mapped_y1 - drawing_canvas_height/2);
         
       }
+
+
+      if(animation_type == 3){
+        opacity = 10;
+        fill(0, 255, 255);
+        noStroke();
+        circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 5*scale_factor);
+      }
+
+
     }
   }
 }
@@ -292,7 +304,28 @@ function configSound(){
 
 
 function keyPressed(){
+  //clean between animations
+  fill(0, 0, 0, 255);
+  noStroke();
+  rect(0, width, height);
+
   if(keyCode == 50){
       btn.click();
+  }
+  //a
+  if(keyCode == 65){
+    animation_type = 0;
+  }
+  //s
+  if(keyCode ==83){
+    animation_type = 1;
+  }
+  //d
+  if(keyCode == 68){
+    animation_type = 2;
+  }
+  //f
+  if(keyCode == 70){
+    animation_type = 3;
   }
 }
