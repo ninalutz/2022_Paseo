@@ -1,5 +1,5 @@
 //Config for video
-var VTX = outer_mouth_landmarks;
+var VTX = mouth_landmarks;
 
 var facemeshModel = null; // this will be loaded with the facemesh model
                           // WARNING: do NOT call it 'model', because p5 already has something called 'model'
@@ -18,8 +18,14 @@ var margin_factor = 8;
 
 var min_x, max_x, min_y, max_y; 
 
-var drawing_canvas_width = 960;
-var drawing_canvas_height = 800;
+var drawing_canvas_width = 1280;
+var drawing_canvas_height = 720;
+
+var animation_type = 1;
+var animation_max = 4;
+var opacity = 40;
+
+let hue = 0;
 
 // Load the MediaPipe facemesh model assets.
 facemesh.load().then(function(_model){
@@ -35,11 +41,12 @@ var videoRecordIndex = 0;
 var recording = false;
 
 function setup() {
+
   configSound();
   btn = document.querySelector('button');
   btn.onclick = recordVideo;
 
-  createCanvas(960, 800);
+  createCanvas(windowWidth, windowHeight);
 
   min_x = drawing_canvas_width/margin_factor;
   max_x = (margin_factor-1)*drawing_canvas_width/margin_factor;
@@ -58,6 +65,8 @@ function setup() {
   }
   
   capture.hide();
+    colorMode(HSB);
+
   background(0);
 }
 
@@ -85,7 +94,7 @@ function draw() {
     })
   }
   
-  background(0);
+  background(0, opacity);
   
 
 
@@ -122,9 +131,24 @@ function drawFaces(faces,filled){
       var mapped_x = map(x*scale_factor, 0, 640, min_x, max_x, false);
       var mapped_y = map(y*scale_factor, 0, 320, min_y, max_y, false);
       fill(0, 255, 255);
-      circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 5*scale_factor);
-      circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 5*scale_factor);
+      if(animation_type == 0){
+        circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 3*scale_factor);
+      }
+      if(animation_type == 1){
+        noStroke();
 
+        fill(hue, 255, 255)
+
+        hue += 0.01;
+        console.log(hue)
+        if (hue > 255) {
+          hue = 0;
+        }
+
+        // circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 18*scale_factor, 18*scale_factor);
+        circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 5*scale_factor, 5*scale_factor);
+
+      }
     }
   }
 }

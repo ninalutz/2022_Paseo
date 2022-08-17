@@ -10,11 +10,11 @@ function setup() {
   vid0 = createVideo('/Downloads/test.webm');
   audio = loadSound('/Downloads/audio_test.wav');
 
-  createCanvas(960, 1080);
+  createCanvas(windowWidth, windowHeight);
   vid0.hide();
   videos = [vid0]
 
-  createCanvas(960, 1080);
+  createCanvas(windowWidth, windowHeight);
 }
 
 
