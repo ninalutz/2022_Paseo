@@ -1,5 +1,5 @@
 //Config for video
-var VTX = mouth_landmarks;
+var VTX = outer_mouth_landmarks;
 
 var facemeshModel = null; // this will be loaded with the facemesh model
                           // WARNING: do NOT call it 'model', because p5 already has something called 'model'
@@ -23,7 +23,11 @@ var drawing_canvas_height = 720;
 
 var animation_type = 1;
 var animation_max = 4;
-var opacity = 40;
+var opacity = 255;
+
+
+///Animations
+var x1, y1;
 
 let hue = 0;
 
@@ -65,7 +69,6 @@ function setup() {
   }
   
   capture.hide();
-    colorMode(HSB);
 
   background(0);
 }
@@ -126,6 +129,7 @@ function drawFaces(faces,filled){
 
     for (var j = 0; j < keypoints.length; j++) {
       const [x, y, z] = keypoints[j];
+      
       // fill(255);
       noStroke();
       var mapped_x = map(x*scale_factor, 0, 640, min_x, max_x, false);
@@ -135,12 +139,13 @@ function drawFaces(faces,filled){
         circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 3*scale_factor);
       }
       if(animation_type == 1){
+        colorMode(HSB);
+
         noStroke();
 
         fill(hue, 255, 255)
 
         hue += 0.01;
-        console.log(hue)
         if (hue > 255) {
           hue = 0;
         }
@@ -148,6 +153,32 @@ function drawFaces(faces,filled){
         // circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 18*scale_factor, 18*scale_factor);
         circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 5*scale_factor, 5*scale_factor);
 
+      }
+
+      if(animation_type == 2){
+        opacity = 8;
+        colorMode(HSB);
+        hue += 0.05;
+        if (hue > 255) {
+          hue = 0;
+        }
+        stroke(hue, 255, 255);
+        strokeWeight(10)
+        strokeJoin(ROUND);
+        strokeCap(ROUND)
+        if(j<keypoints.length-1){
+         x1 = keypoints[j+1][0]
+         y1 = keypoints[j+1][1]
+        }
+        else{
+         x1 = keypoints[0][0]
+         y1 = keypoints[0][1]
+        }
+
+        var mapped_x1 = map(x1*scale_factor, 0, 640, min_x, max_x, false);
+        var mapped_y1 = map(y1*scale_factor, 0, 320, min_y, max_y, false);
+        line(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, mapped_x1 - drawing_canvas_width/2, mapped_y1 - drawing_canvas_height/2);
+        
       }
     }
   }
