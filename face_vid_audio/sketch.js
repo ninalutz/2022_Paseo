@@ -43,6 +43,7 @@ var  chunks = [];
 let mic, soundRecorder, soundFile;
 var videoRecordIndex = 0;
 var recording = false;
+var debug = false;
 
 function setup() {
 
@@ -75,6 +76,10 @@ function setup() {
 
 
 function draw() {
+
+  colorMode(RGB);
+
+
   strokeJoin(ROUND); //otherwise super gnarly
   
   if (facemeshModel && videoDataLoaded){ // model and video both loaded, 
@@ -100,26 +105,40 @@ function draw() {
   background(0, opacity);
   
 
+  stroke(255, 0, 255);
+  drawFaces(myFaces);
 
+  colorMode(RGB);
+
+
+  fill(0);
+  stroke(255);
+  rect(0, 0, width, 80);
+  noStroke();
+  strokeWeight(1);
+  fill(0, 255, 0);
+  textSize(50);
+  text("How have you transformed since 2020?", 640, 40);
+  textSize(20);
+
+  if(debug){
   noFill();
   stroke(255, 0, 0);
   strokeWeight(10);
   rect(min_x, min_y, max_x - min_x, max_y-min_y);
-  
-  push();
-  stroke(255, 0, 255);
-  rect(min_x, min_y, max_x - min_x, max_y-min_y);
-  drawFaces(myFaces);
-  pop();
 
-  fill(0);
-  noStroke();
-  rect(0, 0, width, 80)
   strokeWeight(1);
-  fill(0, 255, 0);
-  textSize(20);
   text(statusText,20,30);
   text('Video/audio clip: ' + videoRecordIndex.toString() + '    Recording: ' + recording,20, 60);
+  }
+  else{
+    if(recording){
+      text("Recording! Press button or '2' to stop and save",20,30);
+    }
+    else{
+      text("Press button or '2' to start recording your answer to this question: ", 20, 30)
+    }
+  }
 
 }
 
@@ -305,12 +324,16 @@ function configSound(){
 
 function keyPressed(){
   //clean between animations
-  fill(0, 0, 0, 255);
-  noStroke();
-  rect(0, width, height);
-
+  // fill(0, 0, 0, 255);
+  // noStroke();
+  // rect(0, width, height);
+  //2 -- the key button
   if(keyCode == 50){
       btn.click();
+  }
+  //z
+  if(keyCode == 90){
+    debug = !debug;
   }
   //a
   if(keyCode == 65){
@@ -328,4 +351,5 @@ function keyPressed(){
   if(keyCode == 70){
     animation_type = 3;
   }
+
 }
