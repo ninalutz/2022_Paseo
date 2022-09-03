@@ -21,8 +21,8 @@ var min_x, max_x, min_y, max_y;
 var drawing_canvas_width = 1280;
 var drawing_canvas_height = 720;
 
-var animation_type = 1;
-var animation_max = 4;
+var animation_max = 3; //number of filters
+var animation_type = 2;
 var opacity = 255;
 
 var timeThanks;
@@ -399,9 +399,11 @@ function keyPressed(){
     state += 1;
     if(state == 3 || state == 4){
       btn.click();
+      console.log(animation_type);
     }
     if(state == 4){
       timeThanks = 3;
+      animation_type = int(random(1, animation_max));
     }
     if(state > 4){
       state = 1;
