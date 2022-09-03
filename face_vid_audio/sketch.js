@@ -92,22 +92,11 @@ function setup() {
 
 function draw() {
 
-  colorMode(RGB);
-
-
-  strokeJoin(ROUND); //otherwise super gnarly
-  
-
-
-  if (facemeshModel && videoDataLoaded){ // model and video both loaded, 
-    
+// model and video both loaded, 
+  if (facemeshModel && videoDataLoaded){ 
     facemeshModel.estimateFaces(capture.elt).then(function(_faces){
-      // we're faceling an async promise
-      // best to avoid drawing something here! it might produce weird results due to racing
-      
-      myFaces = _faces.map(x=>packFace(x,VTX)); // update the global myFaces object with the detected faces
+    myFaces = _faces.map(x=>packFace(x,VTX)); // update the global myFaces object with the detected faces
 
-      // console.log(myFaces);
       if (!myFaces.length){
         // haven't found any faces
         statusText = "Show some faces!"
@@ -122,35 +111,13 @@ function draw() {
 
   if(state !=4){
   background(0, opacity);
-  
-
   stroke(255, 0, 255);
   drawFaces(myFaces);
-
   colorMode(RGB);
-
-  noStroke();
-  fill(0);
-  rect(0, 0, width, 80);
-  strokeWeight(1);
-  fill(0, 255, 0);
-  textSize(50);
-  text("How have you transformed since 2020?", 640, 40);
-  textSize(20);
   }
 
   if(debug){
     drawDebug();
-  }
-  else{
-    if(recording){
-      fill(255, 0, 0);
-      text("Recording! Press button or '2' to stop and save",20,30);
-    }
-    else{
-      fill(255, 255, 0);
-      text("Press button or '2' to start recording your answer to this question: ", 20, 30);
-    }
   }
 
   if(state == 4){
@@ -162,6 +129,9 @@ function draw() {
 function drawThanks(){
     if (frameCount % 60 == 0 && timeThanks > 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
     timeThanks --;
+    textSize(200)
+    textAlign(CENTER);
+    fill(0, 255, 255);
     text("Thanks!",width/2, height/2)
   }
   if (timeThanks == 0) {
@@ -175,9 +145,24 @@ function drawDebug(){
     strokeWeight(10);
     rect(min_x, min_y, max_x - min_x, max_y-min_y);
 
+
+    fill(0);
+    rect(0, 0, width/2, 100);
+    fill(255, 0,0);
     strokeWeight(1);
-    text(statusText,20,30);
+    textSize(14);
+    text(statusText,20,90);
     text('Video/audio clip: ' + videoRecordIndex.toString() + '    Recording: ' + recording + '    state: ' + state,20, 60);
+
+    if(recording){
+      fill(255, 0, 0);
+      text("Recording! Press button or '2' to stop and save",20,30);
+    }
+    else{
+      fill(255, 255, 0);
+      text("Press button or '2' to start recording your answer to this question: ", 20, 30);
+    }
+
 }
 
 
