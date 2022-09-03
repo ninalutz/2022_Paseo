@@ -390,10 +390,6 @@ function configSound(){
 
 
 function keyPressed(){
-  //clean between animations
-  // fill(0, 0, 0, 255);
-  // noStroke();
-  // rect(0, width, height);
   //2 -- the key button
   if(keyCode == 50){
     state += 1;
@@ -403,7 +399,7 @@ function keyPressed(){
     }
     if(state == 4){
       timeThanks = 3;
-      animation_type = int(random(1, animation_max));
+      animation_type = int(random(1, animation_max+1));
     }
     if(state > 4){
       state = 1;
