@@ -116,14 +116,42 @@ function draw() {
   colorMode(RGB);
   }
 
-  if(debug){
-    drawDebug();
+  if(state == 1){
+    drawState1();
+  }
+
+  if(state == 2){
+    drawState2();
   }
 
   if(state == 4){
     drawThanks();
   }
 
+  if(debug){
+    drawDebug();
+  }
+
+}
+
+function drawState1(){
+    textSize(100)
+    textAlign(CENTER);
+    fill(0, 255, 255);
+    noStroke();
+    text("Press the button",width/2, height/2)
+}
+
+function drawState2(){
+    textSize(70)
+    textAlign(CENTER);
+    fill(0, 255, 255);
+    noStroke();
+    text("How have you transformed since 2020?", width/2, height/2-100);
+
+    textSize(60);
+    text("When you're ready, press the button", width/2, height/2 + 30);
+    text("to record your answer.", width/2, height/2 + 90);
 }
 
 function drawThanks(){
@@ -132,14 +160,17 @@ function drawThanks(){
     textSize(200)
     textAlign(CENTER);
     fill(0, 255, 255);
+    noStroke();
     text("Thanks!",width/2, height/2)
   }
   if (timeThanks == 0) {
+    fill(0, 255, 255);
     state = 1;
   }
 }
 
 function drawDebug(){
+  textAlign(LEFT)
     noFill();
     stroke(255, 0, 0);
     strokeWeight(10);
@@ -178,7 +209,7 @@ function drawFaces(faces,filled){
       var mapped_y = map(y*scale_factor, 0, 320, min_y, max_y, false);
       
       if(animation_type == 0){
-        fill(0, 255, 0);
+        fill(0, 200, 0);
         noStroke();
 
         opacity = 255;
@@ -356,7 +387,10 @@ function keyPressed(){
       btn.click();
     }
     if(state == 4){
-      timeThanks = 5;
+      timeThanks = 3;
+    }
+    if(state > 4){
+      state = 1;
     }
   }
   //z
