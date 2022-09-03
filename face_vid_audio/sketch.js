@@ -391,7 +391,12 @@ function configSound(){
 
 function keyPressed(){
   //2 -- the key button
+  //clear canvas
   if(keyCode == 50){
+    if(state != 3){
+    fill(0, 0, 0, 255);
+    rect(0, 0, width, height);
+  }
     state += 1;
     if(state == 3 || state == 4){
       btn.click();
