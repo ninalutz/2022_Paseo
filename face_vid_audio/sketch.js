@@ -21,7 +21,7 @@ var min_x, max_x, min_y, max_y;
 var drawing_canvas_width = 1280;
 var drawing_canvas_height = 720;
 
-var animation_type = 0;
+var animation_type = 1;
 var animation_max = 4;
 var opacity = 255;
 
