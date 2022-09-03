@@ -25,6 +25,14 @@ var animation_type = 0;
 var animation_max = 4;
 var opacity = 255;
 
+var timeThanks;
+
+var state = 1;
+
+//state 1 = Press the button
+//state 2 = prompt to record
+//state 3 = recording
+//state 4 = thanks/end 
 
 ///Animations
 var x1, y1;
@@ -89,6 +97,8 @@ function draw() {
 
   strokeJoin(ROUND); //otherwise super gnarly
   
+
+
   if (facemeshModel && videoDataLoaded){ // model and video both loaded, 
     
     facemeshModel.estimateFaces(capture.elt).then(function(_faces){
@@ -109,6 +119,8 @@ function draw() {
     })
   }
   
+
+  if(state !=4){
   background(0, opacity);
   
 
@@ -125,16 +137,10 @@ function draw() {
   textSize(50);
   text("How have you transformed since 2020?", 640, 40);
   textSize(20);
+  }
 
   if(debug){
-  noFill();
-  stroke(255, 0, 0);
-  strokeWeight(10);
-  rect(min_x, min_y, max_x - min_x, max_y-min_y);
-
-  strokeWeight(1);
-  text(statusText,20,30);
-  text('Video/audio clip: ' + videoRecordIndex.toString() + '    Recording: ' + recording,20, 60);
+    drawDebug();
   }
   else{
     if(recording){
@@ -147,6 +153,31 @@ function draw() {
     }
   }
 
+  if(state == 4){
+    drawThanks();
+  }
+
+}
+
+function drawThanks(){
+    if (frameCount % 60 == 0 && timeThanks > 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
+    timeThanks --;
+    text("Thanks!",width/2, height/2)
+  }
+  if (timeThanks == 0) {
+    state = 1;
+  }
+}
+
+function drawDebug(){
+    noFill();
+    stroke(255, 0, 0);
+    strokeWeight(10);
+    rect(min_x, min_y, max_x - min_x, max_y-min_y);
+
+    strokeWeight(1);
+    text(statusText,20,30);
+    text('Video/audio clip: ' + videoRecordIndex.toString() + '    Recording: ' + recording + '    state: ' + state,20, 60);
 }
 
 
@@ -271,7 +302,6 @@ function recordVideo() {
 
 function downloadVideo() {
   save(soundFile, 'audio_' + (videoRecordIndex-1).toString() +'.wav');
-
   var xhr = new XMLHttpRequest();
   var vid_link =  document.querySelector('myvideo' + videoRecordIndex.toString()).src;
   xhr.open('GET', vid_link, true);
@@ -336,7 +366,13 @@ function keyPressed(){
   // rect(0, width, height);
   //2 -- the key button
   if(keyCode == 50){
+    state += 1;
+    if(state == 3 || state == 4){
       btn.click();
+    }
+    if(state == 4){
+      timeThanks = 5;
+    }
   }
   //z
   if(keyCode == 90){
