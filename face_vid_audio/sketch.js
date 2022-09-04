@@ -180,6 +180,7 @@ function drawThanks(){
   if (timeThanks == 0) {
     fill(0, 255, 255);
     state = 1;
+    btn.click();
   }
 }
 
@@ -272,7 +273,7 @@ function drawFaces(faces,filled){
 
 
       if(animation_type == 3){
-        opacity = 15;
+        opacity = 25;
         fill(0, 255, 255);
         noStroke();
         circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 5*scale_factor);
@@ -331,7 +332,12 @@ function recordVideo() {
 
 
 function downloadVideo() {
-  save(soundFile, 'audio_' + (videoRecordIndex-1).toString() +'.wav');
+  try{
+    save(soundFile, 'audio_' + (videoRecordIndex-1).toString() +'.wav');
+  }
+  catch(error){
+    console.log(error);
+  }
   var xhr = new XMLHttpRequest();
   var vid_link =  document.querySelector('myvideo' + videoRecordIndex.toString()).src;
   xhr.open('GET', vid_link, true);
@@ -405,6 +411,8 @@ function keyPressed(){
     if(state == 4){
       timeThanks = 3;
       animation_type = int(random(1, animation_max+1));
+      //try to add buffer vid + audio at thanks to do the audio recording right
+      btn.click();
     }
     if(state > 4){
       state = 1;
