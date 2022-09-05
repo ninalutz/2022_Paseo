@@ -5,44 +5,55 @@ var videos = [];
 var vid;
 var playing = false;
 var audio;
+var max_i =1;
+
+let recording; 
 
 function setup() {
-  vid0 = createVideo('/Downloads/test.webm');
-  audio = loadSound('/Downloads/audio_test.wav');
+  //set up the worker to listen 
+  registerServiceWorker('service-worker.js');
+  listenMessage(function(incomingData){
+  recording = incomingData.message;
+  console.log(recording);
+  });
+
+  // vid0 = createVideo('/Downloads/AlexSample.webm');
+  audio = loadSound('/Downloads/AlexSample.wav');
+  // videos = [vid0]
 
   createCanvas(windowWidth, windowHeight);
-  vid0.hide();
-  videos = [vid0]
-
-  createCanvas(windowWidth, windowHeight);
 }
 
 
-function draw(){
-if(playing){
-  let img = vid.get();
-  image(img, 0, 0); // redraws the video frame by frame in   
-}
+function draw(){ 
+
+  // if(recording == 'recording'){
+  //   audio.play();
+  //   playing = false;
+  // }
+
+  // if(playing){
+  //   let img = vid.get();
+  //   image(img, 0, 0, width, height); // redraws the video frame by frame in   
+  //   playNextVideo();
+  // }
+
 }
 
-function keyPressed(){
-	playNextVideo();
-	playing = true;
-
-}
+// function keyPressed(){
+// 	playing = true;
+// }
 
 function playNextVideo() {
-  var randomInt = Math.floor(Math.random() * videos.length);
-  console.log(randomInt)
-  vid =  videos[randomInt];
+  // var randomInt = Math.floor(Math.random() * videos.length);
+  // vid =  videos[randomInt];
   
-  vid.play();
-  audio.play();
-  // vid.loop();
-  vid.hide();
+  // vid.play();
+  // audio.play();
+  // vid.hide();
   
-  vid.onended(function() {
-      playNextVideo();
-             });  
+  // vid.onended(function() {
+  //     playNextVideo();
+  //            });  
 
 }      

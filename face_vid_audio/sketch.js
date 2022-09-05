@@ -61,6 +61,9 @@ function setup() {
 
   createCanvas(windowWidth, windowHeight);
 
+  registerServiceWorker('service-worker.js')
+
+
   // min_x = drawing_canvas_width/margin_factor;
   // max_x = (margin_factor-1)*drawing_canvas_width/margin_factor;
   // min_y = drawing_canvas_height/margin_factor;
@@ -139,6 +142,7 @@ function draw() {
 }
 
 function drawState1(){
+    sendMessage('not_recording')
     textSize(100)
     textAlign(CENTER);
     fill(0, 255, 255);
@@ -328,6 +332,7 @@ function recordVideo() {
   soundRecorder.record(soundFile);
   btn.textContent = 'stop recording';
   recording = true;
+  sendMessage('recording')
 }
 
 
