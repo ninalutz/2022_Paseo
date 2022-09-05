@@ -29,6 +29,8 @@ var timeThanks;
 
 var state = 1;
 
+var sent_message = false;
+
 //state 1 = Press the button
 //state 2 = prompt to record
 //state 3 = recording
@@ -142,7 +144,11 @@ function draw() {
 }
 
 function drawState1(){
-    sendMessage('not_recording')
+  if(!sent_message){
+    sendMessage('not_recording');
+    sent_message = true;
+    console.log("Sent not recording")
+  }
     textSize(100)
     textAlign(CENTER);
     fill(0, 255, 255);
@@ -183,6 +189,7 @@ function drawThanks(){
   }
   if (timeThanks == 0) {
     fill(0, 255, 255);
+    sent_message = false;
     state = 1;
     btn.click();
   }
@@ -332,7 +339,12 @@ function recordVideo() {
   soundRecorder.record(soundFile);
   btn.textContent = 'stop recording';
   recording = true;
-  sendMessage('recording')
+  if(!sent_message){
+    sendMessage('recording');
+    sent_message = true;
+    console.log('sent reecording');
+
+  }
 }
 
 
@@ -404,14 +416,18 @@ function keyPressed(){
   //2 -- the key button
   //clear canvas
   if(keyCode == 50){
+
     if(state != 3){
     fill(0, 0, 0, 255);
     rect(0, 0, width, height);
   }
+
     state += 1;
     if(state == 3 || state == 4){
       btn.click();
-      console.log(animation_type);
+    }
+    if(state == 2){
+      sent_message = false;
     }
     if(state == 4){
       timeThanks = 3;

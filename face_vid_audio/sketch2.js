@@ -34,13 +34,16 @@ function setup() {
 function draw(){ 
 
   if(!recording){
-    background(0, 0, 255);
+    // background(0, 0, 255);
   }
   if(recording == 'recording'){
-    background(255, 0, 0);
+    // background(255, 0, 0);
+    playing = false;
   }
   if(recording == 'not_recording'){
-    background(0, 255, 0);
+    // background(0, 255, 0);
+    playing = true;
+    console.log("HELLO")
   }
 
   if(playing){
@@ -52,7 +55,6 @@ function draw(){
 
 function keyPressed(){
   playing = true;
-
   playNext();
 }
 
