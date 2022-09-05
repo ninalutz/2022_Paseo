@@ -1,13 +1,22 @@
-var vid0;
-var vid1;
-var vid2;
 var videos = [];
-var vid;
-var playing = false;
-var audio;
+var audios = [];
 var max_i =1;
-
+var maxIndex = 10;
 let recording; 
+var playing_video;
+var playing_audio;
+var currentInt = 0;
+var playing = false;
+
+function preload(){
+    for(var i = 1; i<maxIndex; i+=2){
+    var video = createVideo('/Downloads/video_' + i.toString() + '.webm');
+    video.hide();
+    videos.push(video);
+    var audio = loadSound('/Downloads/audio_'+i.toString() + '.wav') ;
+    audios.push(audio)
+  }
+}
 
 function setup() {
   //set up the worker to listen 
@@ -17,43 +26,55 @@ function setup() {
   console.log(recording);
   });
 
-  // vid0 = createVideo('/Downloads/AlexSample.webm');
-  audio = loadSound('/Downloads/AlexSample.wav');
-  // videos = [vid0]
-
   createCanvas(windowWidth, windowHeight);
+
 }
 
 
 function draw(){ 
 
-  // if(recording == 'recording'){
-  //   audio.play();
-  //   playing = false;
-  // }
+  if(!recording){
+    background(0, 0, 255);
+  }
+  if(recording == 'recording'){
+    background(255, 0, 0);
+  }
+  if(recording == 'not_recording'){
+    background(0, 255, 0);
+  }
 
-  // if(playing){
-  //   let img = vid.get();
-  //   image(img, 0, 0, width, height); // redraws the video frame by frame in   
-  //   playNextVideo();
-  // }
+  if(playing){
+  let img = playing_video.get();
+  image(img, 0, 0, width, height); // redraws the video frame by frame in   
+  }
 
 }
 
-// function keyPressed(){
-// 	playing = true;
-// }
+function keyPressed(){
+  playing = true;
 
-function playNextVideo() {
+  playNext();
+}
+
+
+
+function playNext() {
+  if(playing_audio){
+    playing_audio.stop();
+  }
   // var randomInt = Math.floor(Math.random() * videos.length);
-  // vid =  videos[randomInt];
+  playing_video =  videos[currentInt];
+  playing_audio = audios[currentInt]
   
-  // vid.play();
-  // audio.play();
-  // vid.hide();
+  playing_video.play();
+  playing_audio.play();
   
-  // vid.onended(function() {
-  //     playNextVideo();
-  //            });  
+  playing_video.onended(function() {playNext();});  
 
-}      
+
+  currentInt += 1;
+  if(currentInt == maxIndex/2){
+    currentInt = 0;
+  }
+
+}  
