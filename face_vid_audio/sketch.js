@@ -35,7 +35,6 @@ var sent_message = false;
 //state 2 = prompt to record
 //state 3 = recording
 //state 4 = thanks/end 
-
 ///Animations
 var x1, y1;
 
@@ -51,7 +50,7 @@ facemesh.load().then(function(_model){
 var btn = document.querySelector('button');
 var  chunks = [];
 let mic, soundRecorder, soundFile;
-var videoRecordIndex = 0;
+var videoRecordIndex = 10;
 var recording = false;
 var debug = false;
 
@@ -351,6 +350,13 @@ function recordVideo() {
 function downloadVideo() {
   try{
     save(soundFile, 'audio_' + (videoRecordIndex-1).toString() +'.wav');
+    //if its an odd video and sound ready -- send to new play
+    if((videoRecordIndex-1) %2 != 0){
+      sendMessage('a_'+(videoRecordIndex-1).toString());
+      console.log("Sent new file")
+      console.log(videoRecordIndex-1)
+    }
+
   }
   catch(error){
     console.log(error);
