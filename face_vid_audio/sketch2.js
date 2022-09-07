@@ -18,20 +18,19 @@ function preload(){
   }
 }
 
+
 function addVideo(index){
+  return new Promise((resolve, reject)=>{
     try{
+      //we want to wait for these to be loaded
       var video = createVideo('/Downloads/video_' + index.toString() + '.webm');
       video.hide();
       videos.push(video);
       var audio = loadSound('/Downloads/audio_'+index.toString() + '.wav') ;
       audios.push(audio);
-      if(video.elt.readyState == 4){
-        // currentInt = videos.length-1;
-        console.log("ready");
-      }
-      else{
-        console.log("Not ready");
-        // currentInt = videos.length-2;
+      //we want to wait for these to be loaded
+      if(video.elt.readyState == 4 && audio.isLoaded()){
+        console.log("READY LOADED");
       }
     }
     catch(error){
@@ -40,10 +39,10 @@ function addVideo(index){
       //load in audio again 
     }
     //no matter what -- trigger play next and increment max index
+    //TODO -- make index diff if totally fails? 
     maxIndex +=2;
-    //testing
-    currentInt = videos.length-2;
-    playNext();
+    currentInt = videos.length-1;
+    resolve('resolved')
   }
 
 function setup() {
@@ -59,7 +58,7 @@ function setup() {
 }
 
 
-function draw(){ 
+async function draw(){ 
 
   if(recording == 'recording'){
     playing = false;
@@ -74,7 +73,13 @@ function draw(){
   }
 
   if(recording == 'not_recording'){
+    console.log("HELLO")
     playing = true;
+    //check if actually playing 
+    if(playing_video.elt.paused == true && playing_audio.isPlaying() == false){
+      playing_video.play();
+      playing_audio.play();
+    }
   }
 
   if(playing && playing_video){
@@ -90,7 +95,8 @@ function draw(){
         //prevent multiple adds
         if(parseInt(recording.split('_')[1]) > maxIndex){
           console.log("adding");
-          addVideo(maxIndex+1);
+          var result = await addVideo(maxIndex+1);
+          playNext();
           playing = true;
         }
       }
@@ -120,10 +126,22 @@ function playNext() {
   }
 
   playing_video =  videos[currentInt];
-  playing_audio = audios[currentInt]
+  playing_audio = audios[currentInt];
+
+  //make sure that the files both exist/are buffered before they are played
+  if(playing_video.elt.readyState == 4 && playing_audio.isLoaded() == true){
+    playing_video.play();
+    playing_audio.play();
+  }
   
-  playing_video.play();
-  playing_audio.play();
+  else{
+    //call function again at next index until it works out
+    currentInt += 1;
+    if(currentInt == maxIndex/2){
+     currentInt = 0;
+    }
+    playNext();
+  }
   
   playing_video.onended(function() {playNext();});  
 
