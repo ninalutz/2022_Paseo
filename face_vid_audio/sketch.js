@@ -21,8 +21,8 @@ var min_x, max_x, min_y, max_y;
 var drawing_canvas_width = 1280;
 var drawing_canvas_height = 720;
 
-var animation_max = 3; //number of filters
-var animation_type = 2;
+var animation_max = 4; //number of filters
+var animation_type = 4;
 var opacity = 255;
 
 var timeThanks;
@@ -30,6 +30,10 @@ var timeThanks;
 var state = 1;
 
 var sent_message = false;
+
+//const for animation 4
+var start_delta = 0;
+var delta_change = 0.005;
 
 //state 1 = Press the button
 //state 2 = prompt to record
@@ -234,51 +238,15 @@ function drawFaces(faces,filled){
       var mapped_y = map(y*scale_factor, 0, 320, min_y, max_y, false);
       
       if(animation_type == 0){
-        fill(0, 200, 0);
-        noStroke();
-
-        opacity = 255;
-        circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 3*scale_factor);
+        drawAnimation0(mapped_x, mapped_y)
       }
 
       if(animation_type == 1){
-        opacity = 255;
-        fill(255);
-        stroke(255);
-        strokeWeight(0.5)
-        circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 5*scale_factor, 5*scale_factor);
-        const [x2, y2, z2] = keypoints[min(j+int(random(1, keypoints.length)), keypoints.length-1)];
-
-        var mapped_x2 = map(x2*scale_factor, 0, 640, min_x, max_x, false);
-        var mapped_y2 = map(y2*scale_factor, 0, 320, min_y, max_y, false);
-
-        line(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, mapped_x2 - drawing_canvas_width/2, mapped_y2 - drawing_canvas_height/2);
+        drawAnimation1(mapped_x, mapped_y, keypoints, j)
       }
 
       if(animation_type == 2){
-        opacity = 15;
-        colorMode(HSB);
-        hue += 0.05;
-        if (hue > 255) {
-          hue = 0;
-        }
-        stroke(hue, 255, 255);
-        strokeWeight(10);
-        strokeJoin(ROUND);
-        strokeCap(ROUND)
-        if(j<keypoints.length-1){
-         x1 = keypoints[j+1][0]
-         y1 = keypoints[j+1][1]
-        }
-        else{
-         x1 = keypoints[0][0]
-         y1 = keypoints[0][1]
-        }
-
-        var mapped_x1 = map(x1*scale_factor, 0, 640, min_x, max_x, false);
-        var mapped_y1 = map(y1*scale_factor, 0, 320, min_y, max_y, false);
-        line(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, mapped_x1 - drawing_canvas_width/2, mapped_y1 - drawing_canvas_height/2);
-        
+        drawAnimation2(mapped_x, mapped_y, keypoints, j)        
       }
 
 
@@ -287,6 +255,10 @@ function drawFaces(faces,filled){
         fill(0, 255, 255);
         noStroke();
         circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 5*scale_factor);
+      }
+
+      if(animation_type == 4){
+        drawAnimation4(mapped_x, mapped_y, keypoints, j);
       }
 
 
@@ -311,6 +283,80 @@ function packFace(face,set){
 }
 
 
+function drawAnimation0(mapped_x, mapped_y){
+ fill(0, 200, 0);
+  noStroke();
+
+  opacity = 255;
+  circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 3*scale_factor);
+}
+
+function drawAnimation1(mapped_x, mapped_y, keypoints, j){  
+  opacity = 255;
+  fill(255);
+  stroke(255);
+  strokeWeight(0.5)
+  circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 5*scale_factor, 5*scale_factor);
+  const [x2, y2, z2] = keypoints[min(j+int(random(1, keypoints.length)), keypoints.length-1)];
+
+  var mapped_x2 = map(x2*scale_factor, 0, 640, min_x, max_x, false);
+  var mapped_y2 = map(y2*scale_factor, 0, 320, min_y, max_y, false);
+
+  line(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, mapped_x2 - drawing_canvas_width/2, mapped_y2 - drawing_canvas_height/2);
+}
+
+
+function drawAnimation4(mapped_x, mapped_y, keypoints, j){  
+  opacity = 255;
+
+
+  stroke(0, start_delta*2, 255);
+  strokeWeight(5)
+  if(start_delta > 100){
+    start_delta = 0;
+    // delta_change*=-1;
+  }
+  // if(start_delta <=0){
+  //   start_delta = 0;
+  //   delta_change*=-1;
+  // }
+
+  line(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2 + start_delta);
+  circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2 + start_delta, 2*scale_factor, 2*scale_factor)
+
+
+  fill(0, 0, 255);
+  stroke(0, 0, 255);
+  circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 5*scale_factor, 5*scale_factor);
+  start_delta += delta_change;
+
+}
+
+function drawAnimation2(mapped_x, mapped_y, keypoints, j){
+  opacity = 15;
+  colorMode(HSB);
+  hue += 0.05;
+  if (hue > 255) {
+    hue = 0;
+  }
+  stroke(hue, 255, 255);
+  strokeWeight(10);
+  strokeJoin(ROUND);
+  strokeCap(ROUND)
+  if(j<keypoints.length-1){
+   x1 = keypoints[j+1][0]
+   y1 = keypoints[j+1][1]
+  }
+  else{
+   x1 = keypoints[0][0]
+   y1 = keypoints[0][1]
+  }
+
+  var mapped_x1 = map(x1*scale_factor, 0, 640, min_x, max_x, false);
+  var mapped_y1 = map(y1*scale_factor, 0, 320, min_y, max_y, false);
+  line(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, mapped_x1 - drawing_canvas_width/2, mapped_y1 - drawing_canvas_height/2);
+
+}
 
 
 function recordVideo() {
@@ -464,6 +510,9 @@ function keyPressed(){
   //f
   if(keyCode == 70){
     animation_type = 3;
+  }
+  if(keyCode == 71){
+    animation_type = 4;
   }
 
 }
