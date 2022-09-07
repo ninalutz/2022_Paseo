@@ -43,7 +43,8 @@ function addVideo(index){
     maxIndex +=2;
     currentInt = videos.length-1;
     resolve('resolved')
-  }
+  })
+}
 
 function setup() {
   //set up the worker to listen 
