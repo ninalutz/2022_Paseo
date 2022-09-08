@@ -8,6 +8,10 @@ var currentInt = 0;
 var playing = false;
 var not_init = true;
 
+//https://xstate.js.org/docs/
+let video_being_loaded;
+let audio_being_loaded;
+
 function preload(){
     for(var i = 1; i<maxIndex; i+=2){
     var video = createVideo('/Downloads/video_' + i.toString() + '.webm');
@@ -19,31 +23,52 @@ function preload(){
 }
 
 
-function addVideo(index){
-  return new Promise((resolve, reject)=>{
-    try{
-      //we want to wait for these to be loaded
-      var video = createVideo('/Downloads/video_' + index.toString() + '.webm');
-      video.hide();
-      videos.push(video);
-      var audio = loadSound('/Downloads/audio_'+index.toString() + '.wav') ;
-      audios.push(audio);
-      //we want to wait for these to be loaded
-      if(video.elt.readyState == 4 && audio.isLoaded()){
-        console.log("READY LOADED");
+function addAudio(index){
+    return new Promise(async (resolve, reject)=>{
+      console.log('creating audio');
+      let audio_path = '/Downloads/audio_'+index.toString() + '.wav'
+
+      const audio_successfully_loaded = (audio_file) => {
+        console.log({audio_file})
+        console.log(audio_file.isLoaded());
+        audios.push(audio_file);
+        resolve("audio loaded");
+
       }
-    }
-    catch(error){
-      console.log(error);
-      console.log("Not Added Correctly");
-      //load in audio again 
-    }
-    //no matter what -- trigger play next and increment max index
-    //TODO -- make index diff if totally fails? 
-    maxIndex +=2;
+
+      loadSound(audio_path, audio_successfully_loaded, () => reject("failed to load audio"));
+
+    })
+}
+
+function addVideo(index){
+       console.log('creating video');
+  return new Promise(async (resolve, reject)=>{
+ 
+      let video_path = `/Downloads/video_${index}.webm`
+      let video_being_created;
+
+      const audio_successfully_loaded = () => {
+        console.log({video_being_created})
+        videos.push(video_being_created);
+        resolve("video loaded");
+
+      }
+      video_being_created = createVideo(video_path, audio_successfully_loaded);
+
+    })
+}
+
+function addMedia(index){
+  // return new Promise(async (resolve, reject)=>{
+  return Promise.all([addVideo(index), addAudio(index)]).then((values) => {
+    console.log({values});
+    console.log("Add media completed promises things")
+    maxIndex += 2;
     currentInt = videos.length-1;
-    resolve('resolved')
-  })
+    console.log("Add media assigned things")  
+  });  
+
 }
 
 function setup() {
@@ -74,12 +99,10 @@ async function draw(){
   }
 
   if(recording == 'not_recording'){
-    console.log("HELLO")
     playing = true;
     //check if actually playing 
     if(playing_video.elt.paused == true && playing_audio.isPlaying() == false){
       playing_video.play();
-      playing_audio.play();
     }
   }
 
@@ -88,15 +111,18 @@ async function draw(){
   image(img, 0, 0, width, height); // redraws the video frame by frame in   
   }
 
-  if(recording){
-    if(recording[0] == 'a'){
+if (recording) {
+  console.log(recording);
+    if (recording.startsWith("a")){
       console.log("a detected");
       //was already defined, so add new video
-      if(playing_audio && playing_video){
+      if (playing_audio && playing_video) {
         //prevent multiple adds
-        if(parseInt(recording.split('_')[1]) > maxIndex){
-          console.log("adding");
-          var result = await addVideo(maxIndex+1);
+        if (parseInt(recording.split('_')[1]) > maxIndex) {
+          console.log("dear lord jesus please work");
+          await addMedia(maxIndex + 1)
+          console.log("Add media has completed execution");
+          console.log("Calling playNext now")
           playNext();
           playing = true;
         }
@@ -117,6 +143,7 @@ function keyPressed(){
 //playing_video.elt.readyState
 function playNext() {
   console.log("Playing next!")
+  console.log({currentInt});
 
   //if it is defined and still playing -- needs to stop
   if(playing_audio){
@@ -132,10 +159,12 @@ function playNext() {
   //make sure that the files both exist/are buffered before they are played
   if(playing_video.elt.readyState == 4 && playing_audio.isLoaded() == true){
     playing_video.play();
-    playing_audio.play();
+    // playing_audio.play();
   }
   
   else{
+    console.log("Wasn't ready")
+    console.log({currentInt});
     //call function again at next index until it works out
     currentInt += 1;
     if(currentInt == maxIndex/2){
