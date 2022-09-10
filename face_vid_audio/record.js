@@ -35,6 +35,7 @@ var sent_message = false;
 var start_delta = 0;
 var delta_change = 0.005;
 
+
 //state 1 = Press the button
 //state 2 = prompt to record
 //state 3 = recording
@@ -57,6 +58,7 @@ let mic, soundRecorder, soundFile;
 var videoRecordIndex = 10;
 var recording = false;
 var debug = false;
+var handshake;
 
 function setup() {
 
@@ -66,13 +68,12 @@ function setup() {
 
   createCanvas(windowWidth, windowHeight);
 
-  registerServiceWorker('service-worker.js')
+  registerServiceWorker('service-worker.js');
 
+  listenMessage(function(incomingData){
+  handshake = incomingData.message;
+  });
 
-  // min_x = drawing_canvas_width/margin_factor;
-  // max_x = (margin_factor-1)*drawing_canvas_width/margin_factor;
-  // min_y = drawing_canvas_height/margin_factor;
-  // max_y = ((margin_factor-1)*drawing_canvas_height)/margin_factor;
 
   min_x = width/margin_factor;
   max_x = (margin_factor-1)*width/margin_factor;
@@ -99,6 +100,23 @@ function setup() {
 
 
 function draw() {
+
+  //need to stop sending a at this point
+  if(handshake == 'a detected' || handshake == 'all_good'){
+    console.log("Send not recording")
+    //send not recording or recording over because if this was the case, need to update
+    if(state == 1 && !sent_message){
+      sendMessage('not_recording');
+      console.log("sending not recording here")
+      //empty out handshake for next one
+      handshake = '';
+    }
+    sent_message = true;
+  }
+  else{
+    console.log(handshake);
+    sendMessage(last_sent_video);
+  }
 
 // model and video both loaded, 
   if (facemeshModel && videoDataLoaded){ 
@@ -180,6 +198,7 @@ function drawState3(){
   }
 
 function drawThanks(){
+
   fill(0)
   rect(0, 0, width, height/4);
     if (frameCount % 60 == 0 && timeThanks > 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
@@ -387,22 +406,15 @@ function recordVideo() {
   if(!sent_message){
     sendMessage('recording');
     sent_message = true;
-    console.log('sent reecording');
+    console.log('sent recording');
 
   }
 }
 
-
+var last_sent_video = '';
 function downloadVideo() {
   try{
     save(soundFile, 'audio_' + (videoRecordIndex-1).toString() +'.wav');
-    //if its an odd video and sound ready -- send to new play
-    if((videoRecordIndex-1) %2 != 0){
-      sendMessage('a_'+(videoRecordIndex-1).toString());
-      console.log("Sent new file")
-      console.log(videoRecordIndex-1)
-    }
-
   }
   catch(error){
     console.log(error);
@@ -426,6 +438,16 @@ function downloadVideo() {
     alert('Failed to download picture');
   };
   xhr.send();
+
+  //if its an odd video and sound ready -- send to new play
+  //maybe here we wait for video even since sound is ready then?
+  // if((videoRecordIndex-1) %2 != 0){
+  if((videoRecordIndex) %2 == 0){
+    last_sent_video = 'a_'+(videoRecordIndex-1).toString();
+    sendMessage(last_sent_video);
+    console.log("Sent new file: " + last_sent_video)
+  }
+
 }
 
 function exportVideo(e) {
@@ -435,7 +457,6 @@ function exportVideo(e) {
   vid.controls = true;
   vid.src = URL.createObjectURL(blob);
   document.body.appendChild(vid);
-  // vid.play();
   downloadVideo();
 }
 

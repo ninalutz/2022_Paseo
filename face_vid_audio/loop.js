@@ -7,10 +7,9 @@ var playing_audio;
 var currentInt = 0;
 var playing = false;
 var not_init = true;
-
-//https://xstate.js.org/docs/
 let video_being_loaded;
 let audio_being_loaded;
+var not_adding = true;
 
 function preload(){
     for(var i = 1; i<maxIndex; i+=2){
@@ -29,11 +28,8 @@ function addAudio(index){
       let audio_path = '/Downloads/audio_'+index.toString() + '.wav'
 
       const audio_successfully_loaded = (audio_file) => {
-        console.log({audio_file})
-        console.log(audio_file.isLoaded());
         audios.push(audio_file);
         resolve("audio loaded");
-
       }
 
       loadSound(audio_path, audio_successfully_loaded, () => reject("failed to load audio"));
@@ -42,8 +38,8 @@ function addAudio(index){
 }
 
 function addVideo(index){
-       console.log('creating video');
-  return new Promise(async (resolve, reject)=>{
+    console.log('creating video');
+    return new Promise(async (resolve, reject)=>{
  
       let video_path = `/Downloads/video_${index}.webm`
       let video_being_created;
@@ -67,13 +63,15 @@ function addMedia(index){
     maxIndex += 2;
     currentInt = videos.length-1;
     console.log("Add media assigned things")  
+    sendMessage('all_good');
+    not_adding = true;
   });  
-
 }
 
 function setup() {
   //set up the worker to listen 
   registerServiceWorker('service-worker.js');
+
   listenMessage(function(incomingData){
   recording = incomingData.message;
   });
@@ -113,15 +111,17 @@ async function draw(){
 
 if (recording) {
     if (recording.startsWith("a")){
-      console.log("a detected");
+      //test sending a message the other way 
+      sendMessage('a detected');
+
       //was already defined, so add new video
       if (playing_audio && playing_video) {
         //prevent multiple adds
-        if (parseInt(recording.split('_')[1]) > maxIndex) {
-          console.log("dear lord jesus please work");
+        if (parseInt(recording.split('_')[1]) > maxIndex && not_adding) {
+          not_adding = false;
+          console.log("queueing add media: " + recording.split('_')[1]);
           await addMedia(maxIndex + 1)
-          console.log("Add media has completed execution");
-          console.log("Calling playNext now")
+          console.log("Add media has completed execution and trigger play next");
           playNext();
           playing = true;
         }
@@ -151,8 +151,7 @@ function keyPressed(){
 
 //playing_video.elt.readyState
 function playNext() {
-  console.log("Playing next!")
-  console.log({currentInt});
+  console.log("Playing next: " + currentInt.toString())
 
   //if it is defined and still playing -- needs to stop
   if(playing_audio){
@@ -169,7 +168,7 @@ function playNext() {
   if(playing_video.elt.readyState == 4 && playing_audio.isLoaded() == true){
     playing_video.play();
     playing_audio.play();
-    console.log("PLAYING")
+    // console.log("PLAYING")
   }
   
   else{
