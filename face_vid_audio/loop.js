@@ -76,7 +76,6 @@ function setup() {
   registerServiceWorker('service-worker.js');
   listenMessage(function(incomingData){
   recording = incomingData.message;
-  console.log(recording);
   });
 
   createCanvas(windowWidth, windowHeight);
@@ -98,6 +97,7 @@ async function draw(){
     text("Recording in progress", width/2, height/2);
   }
 
+
   if(recording == 'not_recording'){
     playing = true;
     //check if actually playing 
@@ -112,7 +112,6 @@ async function draw(){
   }
 
 if (recording) {
-  console.log(recording);
     if (recording.startsWith("a")){
       console.log("a detected");
       //was already defined, so add new video
@@ -129,6 +128,16 @@ if (recording) {
       }
     }
   }
+
+//add prompt to top of playback recordings 
+if(recording != 'recording'){
+  fill(0, 0, 0)
+  rect(0, 0, width, 200);
+  fill(0, 255, 255);
+  textAlign(CENTER)
+  textSize(90);
+  text("How have you transformed since 2020?", width/2, 150);
+}
 
 }
 
@@ -159,7 +168,8 @@ function playNext() {
   //make sure that the files both exist/are buffered before they are played
   if(playing_video.elt.readyState == 4 && playing_audio.isLoaded() == true){
     playing_video.play();
-    // playing_audio.play();
+    playing_audio.play();
+    console.log("PLAYING")
   }
   
   else{
