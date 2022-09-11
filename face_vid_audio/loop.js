@@ -9,7 +9,8 @@ var playing = false;
 var not_init = true;
 let video_being_loaded;
 let audio_being_loaded;
-var not_adding = true;
+let index_to_be_added = 0;
+let adding_file = false;
 
 function preload(){
     for(var i = 1; i<maxIndex; i+=2){
@@ -24,17 +25,31 @@ function preload(){
 
 function addAudio(index){
     return new Promise(async (resolve, reject)=>{
+
       console.log('creating audio');
       let audio_path = '/Downloads/audio_'+index.toString() + '.wav'
 
       const audio_successfully_loaded = (audio_file) => {
-        audios.push(audio_file);
+        if(audios.length <= (index_to_be_added-1)/2){
+          audios.push(audio_file);
+        }
         resolve("audio loaded");
       }
 
-      loadSound(audio_path, audio_successfully_loaded, () => reject("failed to load audio"));
+      if(audios.length <= (index_to_be_added-1)/2){
+         loadSound(audio_path, audio_successfully_loaded, () => reject(defunc()));
+      }
+      else{
+        resolve("audio loaded");
+      }
+
 
     })
+}
+
+function defunc(){
+  console.log("Didn't add files!")
+  file_added = false;
 }
 
 function addVideo(index){
@@ -45,26 +60,35 @@ function addVideo(index){
       let video_being_created;
 
       const audio_successfully_loaded = () => {
-        console.log({video_being_created})
-        videos.push(video_being_created);
+        // console.log({video_being_created})
+        if(videos.length <= (index_to_be_added-1)/2){
+          videos.push(video_being_created);
+        }
+        video_being_created.hide();
         resolve("video loaded");
-
       }
-      video_being_created = createVideo(video_path, audio_successfully_loaded);
-
+      if(videos.length <= (index_to_be_added-1)/2){
+        video_being_created = createVideo(video_path, audio_successfully_loaded);
+      }
+      else{
+        resolve("video loaded");
+      }
     })
-}
+  }
+
+
+
 
 function addMedia(index){
   // return new Promise(async (resolve, reject)=>{
   return Promise.all([addVideo(index), addAudio(index)]).then((values) => {
     console.log({values});
     console.log("Add media completed promises things")
-    maxIndex += 2;
+    adding_file = false;
+    maxIndex = index_to_be_added + 1;
     currentInt = videos.length-1;
     console.log("Add media assigned things")  
-    sendMessage('all_good');
-    not_adding = true;
+    playing = true;
   });  
 }
 
@@ -78,6 +102,7 @@ function setup() {
 
   createCanvas(windowWidth, windowHeight);
 
+  sendMessage("1");
 }
 
 
@@ -85,6 +110,7 @@ async function draw(){
 
   if(recording == 'recording'){
     playing = false;
+    adding_file = false;
     playing_audio.stop();
     playing_video.stop();
     fill(0, 0, 0);
@@ -101,7 +127,9 @@ async function draw(){
     //check if actually playing 
     if(playing_video.elt.paused == true && playing_audio.isPlaying() == false){
       playing_video.play();
+      playing_audio.play();
     }
+
   }
 
   if(playing && playing_video){
@@ -109,25 +137,32 @@ async function draw(){
   image(img, 0, 0, width, height); // redraws the video frame by frame in   
   }
 
+
 if (recording) {
     if (recording.startsWith("a")){
+      index_to_be_added = parseInt(recording.split('_')[1]);
       //test sending a message the other way 
-      sendMessage('a detected');
-
-      //was already defined, so add new video
-      if (playing_audio && playing_video) {
-        //prevent multiple adds
-        if (parseInt(recording.split('_')[1]) > maxIndex && not_adding) {
-          not_adding = false;
-          console.log("queueing add media: " + recording.split('_')[1]);
-          await addMedia(maxIndex + 1)
-          console.log("Add media has completed execution and trigger play next");
-          playNext();
-          playing = true;
-        }
-      }
+      sendMessage(recording);
+      console.log("detected a: " + recording.split('_')[1]);
+      adding_file = true;      
     }
   }
+
+if(adding_file){
+    //prevent multiple adds
+  if (index_to_be_added > maxIndex) {
+    console.log("queueing add media: " + index_to_be_added.toString());
+    let ms = millis(); 
+    if(millis() < 2000){
+      console.log("2 second")
+    }
+    await addMedia(maxIndex + 1);
+    console.log("Add media has completed execution and trigger play next");
+    adding_file = false;
+    playNext();
+    playing = true;
+  }
+}
 
 //add prompt to top of playback recordings 
 if(recording != 'recording'){
@@ -151,7 +186,7 @@ function keyPressed(){
 
 //playing_video.elt.readyState
 function playNext() {
-  console.log("Playing next: " + currentInt.toString())
+  console.log("Playing: " + currentInt.toString() +  " out of " + videos.length.toString())
 
   //if it is defined and still playing -- needs to stop
   if(playing_audio){
@@ -165,29 +200,34 @@ function playNext() {
   playing_audio = audios[currentInt];
 
   //make sure that the files both exist/are buffered before they are played
-  if(playing_video.elt.readyState == 4 && playing_audio.isLoaded() == true){
-    playing_video.play();
-    playing_audio.play();
-    // console.log("PLAYING")
-  }
-  
-  else{
-    console.log("Wasn't ready")
-    console.log({currentInt});
-    //call function again at next index until it works out
-    currentInt += 1;
-    if(currentInt == maxIndex/2){
-     currentInt = 0;
+  try{
+    if(playing_video.elt.readyState == 4 && playing_audio.isLoaded() == true){
+      playing_video.play();
+      playing_audio.play();
     }
-    playNext();
-  }
   
-  playing_video.onended(function() {playNext();});  
+    else{
+      console.log("Wasn't ready: " + currentInt.toString() + playing_audio.isLoaded() + playing_video.elt.readyState)
+      //grab another random and call the function again
+      currentInt = parseInt(random(0, videos.length));
+      playNext();
+    }
+    
+    //make sure playing video always gets the playNext
+    playing_video.onended(function() {playNext();});  
 
-  //loop to start at end of array
-  currentInt += 1;
-  if(currentInt == maxIndex/2){
-    currentInt = 0;
+    //select random for next integer 
+    currentInt = parseInt(random(0, videos.length));
+
+    // if(currentInt == maxIndex/2){
+    //   currentInt = 0;
+    // }
+  }
+
+  catch(error){
+    console.log(error);
+    currentInt = parseInt(random(0, videos.length));
+    playNext();
   }
 
 }  

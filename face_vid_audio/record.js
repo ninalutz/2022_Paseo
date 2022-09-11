@@ -58,7 +58,7 @@ let mic, soundRecorder, soundFile;
 var videoRecordIndex = 10;
 var recording = false;
 var debug = false;
-var handshake;
+let handshake ='1';
 
 function setup() {
 
@@ -98,25 +98,9 @@ function setup() {
   background(0);
 }
 
+var sent_file;
 
 function draw() {
-
-  //need to stop sending a at this point
-  if(handshake == 'a detected' || handshake == 'all_good'){
-    console.log("Send not recording")
-    //send not recording or recording over because if this was the case, need to update
-    if(state == 1 && !sent_message){
-      sendMessage('not_recording');
-      console.log("sending not recording here")
-      //empty out handshake for next one
-      handshake = '';
-    }
-    sent_message = true;
-  }
-  else{
-    console.log(handshake);
-    sendMessage(last_sent_video);
-  }
 
 // model and video both loaded, 
   if (facemeshModel && videoDataLoaded){ 
@@ -162,13 +146,32 @@ function draw() {
     drawDebug();
   }
 
+
+    //this is the default handshake 
+  if(handshake){
+    //nothing here
+  }
+  else{
+    if(handshake == ''){
+      console.log("Sending last video");
+      sendMessage(last_sent_video);
+      sent_message = false;
+    }
+
+    if(handshake == last_sent_video && !sent_message){
+      sendMessage('not_recording');
+      sent_message = true;
+    }
+  }
+
+
 }
 
 function drawState1(){
   if(!sent_message){
+    console.log("sending not recording in state 1")
     sendMessage('not_recording');
     sent_message = true;
-    console.log("Sent not recording")
   }
     textSize(100)
     textAlign(CENTER);
@@ -214,6 +217,7 @@ function drawThanks(){
     sent_message = false;
     state = 1;
     btn.click();
+    console.log("Thanks timer out")
   }
 }
 
@@ -406,19 +410,24 @@ function recordVideo() {
   if(!sent_message){
     sendMessage('recording');
     sent_message = true;
-    console.log('sent recording');
+    console.log('SENT RECORDING');
 
   }
 }
 
+var soundTest;
 var last_sent_video = '';
-function downloadVideo() {
+
+function saveAudio(index){
+  saveSound(soundFile, 'audio_' + index.toString() +'.wav');
+  console.log("Saved audio: " + index.toString());
+}
+
+async function downloadVideo() {
   try{
-    save(soundFile, 'audio_' + (videoRecordIndex-1).toString() +'.wav');
-  }
-  catch(error){
-    console.log(error);
-  }
+    saveAudio(videoRecordIndex-1);
+  } 
+  catch(error){}
   var xhr = new XMLHttpRequest();
   var vid_link =  document.querySelector('myvideo' + videoRecordIndex.toString()).src;
   xhr.open('GET', vid_link, true);
@@ -430,6 +439,7 @@ function downloadVideo() {
     tag.href = imageUrl;
     tag.target = '_blank';
     tag.download = 'video_' + videoRecordIndex.toString() + '.webm';
+    console.log("Saved video: " + videoRecordIndex.toString());
     document.body.appendChild(tag);
     tag.click();
     document.body.removeChild(tag);
@@ -439,15 +449,18 @@ function downloadVideo() {
   };
   xhr.send();
 
-  //if its an odd video and sound ready -- send to new play
-  //maybe here we wait for video even since sound is ready then?
-  // if((videoRecordIndex-1) %2 != 0){
+  //helps to send at a later time
   if((videoRecordIndex) %2 == 0){
-    last_sent_video = 'a_'+(videoRecordIndex-1).toString();
-    sendMessage(last_sent_video);
-    console.log("Sent new file: " + last_sent_video)
+     sendFile(videoRecordIndex-1);
   }
 
+}
+
+function sendFile(index){
+  last_sent_video = 'a_'+(index).toString();
+  handshake = ''; //to catch if first a isn't caught to resend
+  sendMessage(last_sent_video);
+  console.log("Sent new file: " + last_sent_video);
 }
 
 function exportVideo(e) {
