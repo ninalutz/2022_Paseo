@@ -27,13 +27,14 @@ var opacity = 255;
 
 //timer variables
 const minimumTime = 1;
-const maxRecordTime = 10;
+const maxRecordTime = 20;
 const minimumThankTime = 3;
 var timeThanks;
 var timeRecording;
 var minimumPress = minimumTime;
 var maxPress = maxRecordTime;
 var canSaveRecording = false;
+let additionalThanks = '';
 
 var state = 1;
 
@@ -220,6 +221,7 @@ function drawState3(){
       console.log(maxPress)
       if(maxPress == 0){
         console.log("Max time reached")
+        additionalThanks = "You reached the max time. Feel free to record another answer!";
         btn.click();
         state=4;
         timeThanks = minimumThankTime;
@@ -240,8 +242,17 @@ function drawThanks(){
     textSize(200)
     textAlign(CENTER);
     fill(0, 255, 255);
-    noStroke();
+    strokeWeight(1);
+    stroke(0);
+    // noStroke();
     text("Thanks!",width/2, height/2)
+    if(additionalThanks != ''){
+      textSize(100);
+      var row1 = split(additionalThanks, '.')[0];
+      var row2 = split(additionalThanks, '.')[1];
+      text(row1, width/2, height/2+100);
+      text(row2, width/2, height/2+200);
+    }
   }
   if (timeThanks == 0) {
     fill(0, 255, 255);
@@ -253,6 +264,7 @@ function drawThanks(){
     canSaveRecording = false;
     minimumPress = minimumTime;
     maxPress = maxRecordTime;
+    additionalThanks = '';
   }
 }
 
