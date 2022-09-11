@@ -26,8 +26,8 @@ var animation_type = 4;
 var opacity = 255;
 
 //timer variables
-const minimumTime = 2;
-const maxRecordTime = 60;
+const minimumTime = 1;
+const maxRecordTime = 10;
 const minimumThankTime = 3;
 var timeThanks;
 var timeRecording;
@@ -215,6 +215,20 @@ function drawState3(){
       }
     }
 
+    if(frameCount % 60 == 0 && maxPress > 0){
+      maxPress --;
+      console.log(maxPress)
+      if(maxPress == 0){
+        console.log("Max time reached")
+        btn.click();
+        state=4;
+        timeThanks = minimumThankTime;
+        console.log("Thanks entered")
+        animation_type = int(random(1, animation_max+1));
+        btn.click();
+      }
+    }
+
 }
 
 function drawThanks(){
@@ -235,9 +249,10 @@ function drawThanks(){
     state = 1;
     btn.click();
     console.log("Thanks timer out")
-    //reset recording minimums
+    //reset recording minimums and maxes
     canSaveRecording = false;
     minimumPress = minimumTime;
+    maxPress = maxRecordTime;
   }
 }
 
