@@ -12,8 +12,9 @@ let audio_being_loaded;
 let index_to_be_added = 0;
 let adding_file = false;
 
+
 function preload(){
-    for(var i = 1; i<maxIndex; i+=2){
+  for(var i = 1; i<maxIndex; i+=2){
     var video = createVideo('/Downloads/video_' + i.toString() + '.webm');
     video.hide();
     videos.push(video);
@@ -43,13 +44,11 @@ function addAudio(index){
         resolve("audio loaded"); //don't want to add too many 
       }
 
-
     })
 }
 
 function defunc(){
   console.log("Didn't add files!")
-  file_added = false;
 }
 
 function addVideo(index){
@@ -78,17 +77,31 @@ function addVideo(index){
   }
 
 
+function cleanArrays(){
+  console.log("Cleaning arrays")
+  if(audios.length > 10){
+    audios = [];
+  }
+  if(videos.length > 10){
+    for (var i = 0; i<videos.length; i++){
+      videos[i].remove();
+    }
+    videos = []
+  }
 
+  //make new arrays
+
+}
 
 function addMedia(index){
   // return new Promise(async (resolve, reject)=>{
-  return Promise.all([addVideo(index), addAudio(index)]).then((values) => {
+  return Promise.all([cleanArrays(), addAudio(index), addVideo(index)]).then((values) => {
     console.log({values});
     console.log("Add media completed promises things")
-    adding_file = false;
     maxIndex = index_to_be_added + 1;
     currentInt = videos.length-1;
-    console.log("Add media assigned things")  
+    console.log("Add media assigned things") 
+    adding_file = false;
     playing = true;
   });  
 }
@@ -112,8 +125,10 @@ async function draw(){
   if(recording == 'recording'){
     playing = false;
     adding_file = false;
-    playing_audio.stop();
-    playing_video.stop();
+    if(playing_audio && playing_video){
+      playing_audio.stop();
+      playing_video.stop();
+    }
     fill(0, 0, 0);
     rect(0, 0, width, height);
     fill(255, 0, 0);
@@ -134,8 +149,8 @@ async function draw(){
   }
 
   if(playing && playing_video){
-  let img = playing_video.get();
-  image(img, 0, 0, width, height); // redraws the video frame by frame in   
+    let img = playing_video.get();
+    image(img, 0, 0, width, height); // redraws the video frame by frame in   
   }
 
 
@@ -145,25 +160,17 @@ if (recording) {
       //test sending a message the other way 
       sendMessage(recording);
       console.log("detected a: " + recording.split('_')[1]);
-      adding_file = true;      
+      //only call this once
+      if (index_to_be_added > maxIndex && !adding_file) {
+        adding_file = true;  
+        console.log("queueing add media: " + index_to_be_added.toString());
+        await addMedia(maxIndex + 1);
+        console.log("Add media has completed execution and trigger play next");
+        playNext();
+        playing = true;
+      }    
     }
   }
-
-if(adding_file){
-    //prevent multiple adds
-  if (index_to_be_added > maxIndex) {
-    console.log("queueing add media: " + index_to_be_added.toString());
-    let ms = millis(); 
-    if(millis() < 2000){
-      console.log("2 second")
-    }
-    await addMedia(maxIndex + 1);
-    console.log("Add media has completed execution and trigger play next");
-    adding_file = false;
-    playNext();
-    playing = true;
-  }
-}
 
 //add prompt to top of playback recordings 
 if(recording != 'recording'){
