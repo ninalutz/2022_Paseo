@@ -25,7 +25,15 @@ var animation_max = 4; //number of filters
 var animation_type = 4;
 var opacity = 255;
 
+//timer variables
+const minimumTime = 2;
+const maxRecordTime = 60;
+const minimumThankTime = 3;
 var timeThanks;
+var timeRecording;
+var minimumPress = minimumTime;
+var maxPress = maxRecordTime;
+var canSaveRecording = false;
 
 var state = 1;
 
@@ -153,7 +161,7 @@ function draw() {
   }
   else{
     if(handshake == ''){
-      console.log("Sending last video");
+      // console.log("Sending last video");
       sendMessage(last_sent_video);
       sent_message = false;
     }
@@ -169,7 +177,7 @@ function draw() {
 
 function drawState1(){
   if(!sent_message){
-    console.log("sending not recording in state 1")
+    // console.log("sending not recording in state 1")
     sendMessage('not_recording');
     sent_message = true;
   }
@@ -198,13 +206,22 @@ function drawState3(){
     fill(0, 255, 255);
     noStroke();
     text("Press button when you are done", width/2, 100);
-  }
+
+    if (frameCount % 60 == 0 && minimumPress > 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
+      minimumPress --;
+      if(minimumPress == 0){
+        canSaveRecording = true;
+        console.log("Can save recording")
+      }
+    }
+
+}
 
 function drawThanks(){
 
   fill(0)
   rect(0, 0, width, height/4);
-    if (frameCount % 60 == 0 && timeThanks > 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
+  if (frameCount % 60 == 0 && timeThanks > 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
     timeThanks --;
     textSize(200)
     textAlign(CENTER);
@@ -218,6 +235,9 @@ function drawThanks(){
     state = 1;
     btn.click();
     console.log("Thanks timer out")
+    //reset recording minimums
+    canSaveRecording = false;
+    minimumPress = minimumTime;
   }
 }
 
@@ -499,33 +519,52 @@ function configSound(){
 }
 
 
+
 function keyPressed(){
   //2 -- the key button
-  //clear canvas
   if(keyCode == 50){
 
-    if(state != 3){
-    fill(0, 0, 0, 255);
-    rect(0, 0, width, height);
+
+      //only incremenet if canSaveRecording
+      if(state == 3 && !canSaveRecording){
+        console.log("Can't move past record yet")
+        return false;
+      }
+
+      //Never allow movement from thanks
+      if(state == 4){
+        console.log("Can't move out of thanks")
+        return false;
+      }
+
+      if(state != 3){
+        fill(0, 0, 0, 255);
+        rect(0, 0, width, height);
+      }
+
+      state += 1;
+
+
+      if(state == 3 || state == 4){
+        btn.click();
+        console.log("Clicking button")
+      }
+      if(state == 2){
+        sent_message = false;
+      }
+      if(state == 4){
+        timeThanks = minimumThankTime;
+        console.log("Thanks entered")
+        animation_type = int(random(1, animation_max+1));
+        btn.click();
+      }
+      if(state > 4){
+        state = 1;
+      } 
+      
   }
 
-    state += 1;
-    if(state == 3 || state == 4){
-      btn.click();
-    }
-    if(state == 2){
-      sent_message = false;
-    }
-    if(state == 4){
-      timeThanks = 3;
-      animation_type = int(random(1, animation_max+1));
-      //try to add buffer vid + audio at thanks to do the audio recording right
-      btn.click();
-    }
-    if(state > 4){
-      state = 1;
-    }
-  }
+  //these are all visual buttons
   //z
   if(keyCode == 90){
     debug = !debug;
