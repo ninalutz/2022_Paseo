@@ -23,6 +23,10 @@ function preload(){
   }
 }
 
+function checkLoad(audio_file){
+  console.log(audio_file.isLoaded())
+  return audio_file.isLoaded();
+}
 
 function addAudio(index){
     return new Promise(async (resolve, reject)=>{
@@ -38,13 +42,26 @@ function addAudio(index){
       }
 
       if(audios.length <= (index_to_be_added-1)/2){
-         loadSound(audio_path, audio_successfully_loaded, () => reject(defunc()));
-      }
-      else{
-        resolve("audio loaded"); //don't want to add too many 
+         loadSound(audio_path, audio_successfully_loaded, () => reject(defunc()), track());
       }
 
+     // if(audios.length <= (index_to_be_added-1)/2){
+     //    try{ 
+     //       audio_being_loaded = loadSound(audio_path, checkLoad, () => reject(defunc()), track());
+     //     }
+     //     catch(error){
+     //      console.log(error);
+     //     }
+     // }
+     //  else{
+     //    resolve("audio loaded"); //don't want to add too many 
+     //  }
+
     })
+}
+
+function track(){
+  console.log("LOADING")
 }
 
 function defunc(){
@@ -78,19 +95,17 @@ function addVideo(index){
 
 
 function cleanArrays(){
-  console.log("Cleaning arrays")
-  if(audios.length > 10){
-    audios = [];
-  }
-  if(videos.length > 10){
-    for (var i = 0; i<videos.length; i++){
-      videos[i].remove();
-    }
-    videos = []
-  }
-
+  // console.log("Cleaning arrays")
+  // if(audios.length > 10){
+  //   audios = [];
+  // }
+  // if(videos.length > 10){
+  //   for (var i = 0; i<videos.length; i++){
+  //     videos[i].remove();
+  //   }
+  //   videos = []
+  // }
   //make new arrays
-
 }
 
 function addMedia(index){
@@ -140,8 +155,10 @@ async function draw(){
 
   if(recording == 'not_recording'){
     playing = true;
-    //check if actually playing 
+    //check if actually playing and might have to queue up 
     if(playing_video.elt.paused == true && playing_audio.isPlaying() == false){
+      console.log("Had to manually play up videos");
+      console.log({adding_file})
       playing_video.play();
       playing_audio.play();
     }
@@ -168,7 +185,7 @@ if (recording) {
         console.log("Add media has completed execution and trigger play next");
         playNext();
         playing = true;
-      }    
+      } 
     }
   }
 

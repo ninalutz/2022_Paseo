@@ -451,7 +451,8 @@ async function downloadVideo() {
 
   //helps to send at a later time
   if((videoRecordIndex) %2 == 0){
-     sendFile(videoRecordIndex-1);
+    //get the odd before that we know exists 
+     sendFile(videoRecordIndex-3);
   }
 
 }
