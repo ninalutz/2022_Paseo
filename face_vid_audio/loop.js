@@ -40,7 +40,7 @@ function addAudio(index){
          loadSound(audio_path, audio_successfully_loaded, () => reject(defunc()));
       }
       else{
-        resolve("audio loaded");
+        resolve("audio loaded"); //don't want to add too many 
       }
 
 
@@ -67,11 +67,12 @@ function addVideo(index){
         video_being_created.hide();
         resolve("video loaded");
       }
+
       if(videos.length <= (index_to_be_added-1)/2){
         video_being_created = createVideo(video_path, audio_successfully_loaded);
       }
       else{
-        resolve("video loaded");
+        resolve("video loaded"); //don't want to add too many 
       }
     })
   }
