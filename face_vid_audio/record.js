@@ -236,7 +236,7 @@ function drawState3(){
 function drawThanks(){
 
   fill(0)
-  rect(0, 0, width, height/4);
+  rect(0, 0, width, height/7);
   if (frameCount % 60 == 0 && timeThanks > 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
     timeThanks --;
     textSize(200)
