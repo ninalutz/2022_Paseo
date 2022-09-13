@@ -711,7 +711,7 @@ function keyPressed(){
       if(state == 4){
         timeThanks = minimumThankTime;
         console.log("Thanks entered")
-        animation_type = int(random(1, animation_max+1));
+        assignAnimationType();
         btn.click();
       }
       if(state > 4){
@@ -759,18 +759,7 @@ function keyPressed(){
   }
   //l
   if(keyCode == 76){
-    var temp_type = int(random(1, animation_max+1));
-    if(temp_type != animation_type){
-      animation_type = temp_type;
-    }
-    else{
-      if(animation_type == animation_max || animation_type == 1){
-        animation_type = 2;
-      }
-      else{
-        animation_type = 1;
-      }
-    }
+    assignAnimationType()
   }
 
 }
