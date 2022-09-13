@@ -1,6 +1,6 @@
 var videos = [];
 var audios = [];
-var maxIndex = 22;
+var maxIndex = 10;
 let recording; 
 var playing_video;
 var playing_audio;

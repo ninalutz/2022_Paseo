@@ -21,8 +21,8 @@ var min_x, max_x, min_y, max_y;
 var drawing_canvas_width = 1280;
 var drawing_canvas_height = 720;
 
-var animation_max = 4; //number of filters
-var animation_type = 4;
+var animation_max = 8; //number of filters
+var animation_type = 8;
 var opacity = 255;
 
 //timer variables
@@ -226,11 +226,26 @@ function drawState3(){
         state=4;
         timeThanks = minimumThankTime;
         console.log("Thanks entered")
-        animation_type = int(random(1, animation_max+1));
+        assignAnimationType();
         btn.click();
       }
     }
 
+}
+
+function assignAnimationType(){
+    var temp_type = int(random(1, animation_max+1));
+        if(temp_type != animation_type){
+          animation_type = temp_type;
+        }
+        else{
+          if(animation_type == animation_max || animation_type == 1){
+            animation_type = 2;
+          }
+          else{
+            animation_type = 1;
+          }
+        }
 }
 
 function drawThanks(){
@@ -319,7 +334,6 @@ function drawFaces(faces,filled){
         drawAnimation2(mapped_x, mapped_y, keypoints, j)        
       }
 
-
       if(animation_type == 3){
         opacity = 25;
         fill(0, 255, 255);
@@ -331,6 +345,21 @@ function drawFaces(faces,filled){
         drawAnimation4(mapped_x, mapped_y, keypoints, j);
       }
 
+      if(animation_type == 5){
+        drawAnimation5(mapped_x, mapped_y, keypoints, j)
+      }
+
+      if(animation_type == 6){
+        drawAnimation6(mapped_x, mapped_y, keypoints, j);
+      }
+
+      if(animation_type == 7){
+        drawAnimation7(mapped_x, mapped_y, keypoints, j);
+      }
+
+      if(animation_type == 8){
+        drawAnimation8(mapped_x, mapped_y, keypoints, j);
+      }
 
     }
   }
@@ -375,6 +404,34 @@ function drawAnimation1(mapped_x, mapped_y, keypoints, j){
   line(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, mapped_x2 - drawing_canvas_width/2, mapped_y2 - drawing_canvas_height/2);
 }
 
+function drawAnimation7(mapped_x, mapped_y, keypoints, j){  
+  opacity = 255;
+  fill(255);
+  stroke(255);
+  strokeWeight(7);
+  var j_top = int(random(14, 22));
+  var j_bottom = int(random(44, 52));
+  // circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 5*scale_factor, 5*scale_factor);
+  const [x2, y2, z2] = keypoints[j_top];
+  const [x3, y3, z3] = keypoints[j_bottom];
+
+  var mapped_x2 = map(x2*scale_factor, 0, 640, min_x, max_x, false);
+  var mapped_y2 = map(y2*scale_factor, 0, 320, min_y, max_y, false);
+
+
+  var mapped_x3 = map(x3*scale_factor, 0, 640, min_x, max_x, false);
+  var mapped_y3 = map(y3*scale_factor, 0, 320, min_y, max_y, false);
+
+  if(j > 0 && j<10){
+    line(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, mapped_x2 - drawing_canvas_width/2, mapped_y2 - drawing_canvas_height/2);
+  }
+
+  if(j>28 && j<40){
+    line(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, mapped_x3 - drawing_canvas_width/2, mapped_y3 - drawing_canvas_height/2);
+  }
+
+}
+
 
 function drawAnimation4(mapped_x, mapped_y, keypoints, j){  
   opacity = 255;
@@ -384,12 +441,7 @@ function drawAnimation4(mapped_x, mapped_y, keypoints, j){
   strokeWeight(5)
   if(start_delta > 100){
     start_delta = 0;
-    // delta_change*=-1;
   }
-  // if(start_delta <=0){
-  //   start_delta = 0;
-  //   delta_change*=-1;
-  // }
 
   line(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2 + start_delta);
   circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2 + start_delta, 2*scale_factor, 2*scale_factor)
@@ -402,6 +454,31 @@ function drawAnimation4(mapped_x, mapped_y, keypoints, j){
 
 }
 
+function drawAnimation6(mapped_x, mapped_y, keypoints, j){  
+  opacity = 255;
+
+
+  stroke(255, start_delta*2.5, start_delta*2);
+  strokeWeight(20)
+  if(start_delta > 50){
+    start_delta = 0;
+  }
+
+if(j > 0 && j<10){
+  line(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2 + start_delta);
+ }
+
+ if(j>28 && j<40){
+    line(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2 + start_delta);
+ }
+
+  fill(0, 0, 255);
+  stroke(0, 0, 255);
+  //circle(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, 5*scale_factor, 5*scale_factor);
+  start_delta += delta_change;
+
+}
+
 function drawAnimation2(mapped_x, mapped_y, keypoints, j){
   opacity = 15;
   colorMode(HSB);
@@ -410,6 +487,58 @@ function drawAnimation2(mapped_x, mapped_y, keypoints, j){
     hue = 0;
   }
   stroke(hue, 255, 255);
+  strokeWeight(10);
+  strokeJoin(ROUND);
+  strokeCap(ROUND)
+  if(j<keypoints.length-1){
+   x1 = keypoints[j+1][0]
+   y1 = keypoints[j+1][1]
+  }
+  else{
+   x1 = keypoints[0][0]
+   y1 = keypoints[0][1]
+  }
+
+  var mapped_x1 = map(x1*scale_factor, 0, 640, min_x, max_x, false);
+  var mapped_y1 = map(y1*scale_factor, 0, 320, min_y, max_y, false);
+  line(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, mapped_x1 - drawing_canvas_width/2, mapped_y1 - drawing_canvas_height/2);
+
+}
+
+function drawAnimation5(mapped_x, mapped_y, keypoints, j){
+  opacity = 15;
+  colorMode(RGB);
+  hue += 0.05;
+  if (hue > 255) {
+    hue = 0;
+  }
+  stroke(hue, 255, 255);
+  strokeWeight(10);
+  strokeJoin(ROUND);
+  strokeCap(ROUND)
+  if(j<keypoints.length-1){
+   x1 = keypoints[j+1][0]
+   y1 = keypoints[j+1][1]
+  }
+  else{
+   x1 = keypoints[0][0]
+   y1 = keypoints[0][1]
+  }
+
+  var mapped_x1 = map(x1*scale_factor, 0, 640, min_x, max_x, false);
+  var mapped_y1 = map(y1*scale_factor, 0, 320, min_y, max_y, false);
+  line(mapped_x - drawing_canvas_width/2, mapped_y - drawing_canvas_height/2, mapped_x1 - drawing_canvas_width/2, mapped_y1 - drawing_canvas_height/2);
+
+}
+
+function drawAnimation8(mapped_x, mapped_y, keypoints, j){
+  opacity = 15;
+  colorMode(RGB);
+  hue += 0.05;
+  if (hue > 255) {
+    hue = 0;
+  }
+  stroke(255, hue, 255-hue);
   strokeWeight(10);
   strokeJoin(ROUND);
   strokeCap(ROUND)
@@ -612,8 +741,36 @@ function keyPressed(){
   if(keyCode == 70){
     animation_type = 3;
   }
+  //g
   if(keyCode == 71){
     animation_type = 4;
+  }
+  //h
+  if(keyCode == 72){
+    animation_type = 5;
+  }
+  //j
+  if(keyCode == 74){
+    animation_type = 6;
+  }
+  //k
+  if(keyCode == 75){
+    animation_type = 7;
+  }
+  //l
+  if(keyCode == 76){
+    var temp_type = int(random(1, animation_max+1));
+    if(temp_type != animation_type){
+      animation_type = temp_type;
+    }
+    else{
+      if(animation_type == animation_max || animation_type == 1){
+        animation_type = 2;
+      }
+      else{
+        animation_type = 1;
+      }
+    }
   }
 
 }
