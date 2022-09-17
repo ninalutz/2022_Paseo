@@ -26,6 +26,7 @@ var animation_type = 8;
 var opacity = 255;
 
 //timer variables
+var videoRecordIndex = 38;
 const minimumTime = 1;
 const maxRecordTime = 20;
 const minimumThankTime = 3;
@@ -64,7 +65,6 @@ facemesh.load().then(function(_model){
 var btn = document.querySelector('button');
 var  chunks = [];
 let mic, soundRecorder, soundFile;
-var videoRecordIndex = 10;
 var recording = false;
 var debug = false;
 let handshake ='1';
@@ -218,7 +218,7 @@ function drawState3(){
 
     if(frameCount % 60 == 0 && maxPress > 0){
       maxPress --;
-      console.log(maxPress)
+      // console.log(maxPress)
       if(maxPress == 0){
         console.log("Max time reached")
         additionalThanks = "You reached the max time. Feel free to record another answer!";

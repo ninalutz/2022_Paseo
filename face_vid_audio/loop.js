@@ -1,6 +1,6 @@
 var videos = [];
 var audios = [];
-var maxIndex = 10;
+var maxIndex = 38;
 let recording; 
 var playing_video;
 var playing_audio;
@@ -21,6 +21,7 @@ function preload(){
     var audio = loadSound('/Downloads/audio_'+i.toString() + '.wav') ;
     audios.push(audio)
   }
+  console.log("Loaded")
 }
 
 function checkLoad(audio_file){
