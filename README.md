@@ -4,6 +4,7 @@ What is this and how does it work???
 
 This was an art project for the 2022 Paseo festival! This code has 2 p5.js sketches that run together. The code is relatively stable and clean, but defintely not perfect. https://paseoproject.org/paseo2022 
 
+### Disclaimer: I am not a SWE and this code is not perfect. All things were run on Mac OS in Google Chrome -- not testing on Windows.
 
 ## Description of sketches
 ### Sketch 1: record.js
@@ -28,5 +29,5 @@ This was an art project for the 2022 Paseo festival! This code has 2 p5.js sketc
 1. Download repo 
 2. Make sure you are connected to the internet 
 3. Start up a local server
-4. Navigate to /face_vid_audio/index.html to record. This sketch must be run FIRST. Once this is loaded completely you can run loop.js 
+4. Navigate to /face_vid_audio/index.html to record. This sketch must be run FIRST. Once this is loaded completely you can run loop.js at /face_vid_audio/play.html
 5. loop.js will want some data, so make that match with the preload directy and expectation of the number of files. 
