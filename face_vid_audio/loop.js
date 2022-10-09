@@ -1,5 +1,6 @@
 var videos = [];
 var audios = [];
+//index max for preloading files -- increments when things are added
 var maxIndex = 38;
 let recording; 
 var playing_video;
@@ -32,7 +33,7 @@ function checkLoad(audio_file){
 function addAudio(index){
     return new Promise(async (resolve, reject)=>{
 
-      console.log('creating audio');
+      // console.log('creating audio');
       let audio_path = '/Downloads/audio_'+index.toString() + '.wav'
 
       const audio_successfully_loaded = (audio_file) => {
@@ -45,18 +46,6 @@ function addAudio(index){
       if(audios.length <= (index_to_be_added-1)/2){
          loadSound(audio_path, audio_successfully_loaded, () => reject(defunc()), track());
       }
-
-     // if(audios.length <= (index_to_be_added-1)/2){
-     //    try{ 
-     //       audio_being_loaded = loadSound(audio_path, checkLoad, () => reject(defunc()), track());
-     //     }
-     //     catch(error){
-     //      console.log(error);
-     //     }
-     // }
-     //  else{
-     //    resolve("audio loaded"); //don't want to add too many 
-     //  }
 
     })
 }
@@ -72,7 +61,6 @@ function defunc(){
 function addVideo(index){
     console.log('creating video');
     return new Promise(async (resolve, reject)=>{
- 
       let video_path = `/Downloads/video_${index}.webm`
       let video_being_created;
 

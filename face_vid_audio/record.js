@@ -12,15 +12,12 @@ var myFaces = []; // faces detected in this browser
                   // currently facemesh only supports single face, so this will be either empty or singleton
 var capture; // webcam capture, managed by p5.js
 
-//scale fro drawing the dots in the bounds
+//scale for drawing the dots in the bounds
 var scale_factor = 2;
 var margin_factor = 8;
-
 var min_x, max_x, min_y, max_y; 
-
 var drawing_canvas_width = 1280;
 var drawing_canvas_height = 720;
-
 var animation_max = 8; //number of filters
 var animation_type = 8;
 var opacity = 255;
