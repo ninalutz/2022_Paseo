@@ -30,3 +30,12 @@ This was an art project for the 2022 Paseo festival! This code has 2 p5.js sketc
 3. Start up a local server
 4. Navigate to /face_vid_audio/index.html to record. This sketch must be run FIRST. Once this is loaded completely you can run loop.js 
 5. loop.js will want some data, so make that match with the preload directy and expectation of the number of files. 
+
+## Issues? 
+Please find me at twitter @ninasketches 
+
+## Here's some of the filters
+![alt text](PaseoFilters/1.png)
+![alt text](PaseoFilters/11.png)
+![alt text](PaseoFilters/7.png)
+
